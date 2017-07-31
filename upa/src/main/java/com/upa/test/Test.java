@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 import com.upa.web.constant.HandScanConstant;
 import com.upa.web.model.HandScanRecord;
 import com.upa.web.service.HandScanServiceImpl;
-
+//
 public class Test {
 	
 	private static HandScanServiceImpl handscanservice = new HandScanServiceImpl();

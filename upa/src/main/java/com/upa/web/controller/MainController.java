@@ -16,6 +16,7 @@ import com.upa.web.beans.MyBean;
 
 @Controller
 public class MainController {
+	//MainController is the first java file being executed at tomcat server.
 	
 	private MyBean myBean;
 
@@ -29,7 +30,9 @@ public class MainController {
 		
 		List<String> list = getList();
 
-		ModelAndView model = new ModelAndView("index");
+	    //This is where the default page is set. Depending on the purpose, change the default jsp.	
+		//ModelAndView model = new ModelAndView("index");
+		ModelAndView model = new ModelAndView("login");
 		model.addObject("lists", list);
 		
 		/*

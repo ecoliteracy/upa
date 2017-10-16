@@ -16,6 +16,7 @@ import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import com.upa.web.model.AppUser;
 import com.upa.web.model.HandScanRecord;
 
 @Configuration
@@ -65,6 +66,7 @@ public class HibernateConfig {
 		sessionFactory.setPackagesToScan(new String[] { "com.upa.web.model" });
 		//Test
 		sessionFactory.setAnnotatedClasses(new Class[]{HandScanRecord.class});
+		sessionFactory.setAnnotatedClasses(new Class[]{AppUser.class});
 		
 		sessionFactory.setHibernateProperties(getHibernateProperties());
 		return sessionFactory;

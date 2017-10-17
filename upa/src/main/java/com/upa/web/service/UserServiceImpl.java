@@ -17,10 +17,8 @@ public class UserServiceImpl implements UserService {
 		this.userdao = userdao;
 	}
 	
-	public Boolean isValidUserPassword(Login l){
-		
-		return userdao.isValidUserPassword(l);
-		
+	public Boolean isValidUserPassword(Login l){		
+		return userdao.isValidUserPassword(l);		
 	}
 	
 }

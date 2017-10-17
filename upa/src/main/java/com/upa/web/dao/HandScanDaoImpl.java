@@ -47,7 +47,7 @@ public class HandScanDaoImpl implements HandScanDao{
 	@Override
 	public String getCurrentDate() {
         Session session = sessionFactory.openSession();
-        SQLQuery sqlQuery = session.createSQLQuery("select now()  as sysdate from dual");
+        SQLQuery sqlQuery = session.createSQLQuery("select now() as sysdate from dual");
         String result = sqlQuery.getSingleResult().toString();
         return sqlQuery.toString();
 	}

@@ -18,6 +18,8 @@ import com.upa.web.beans.MyBean;
 import com.upa.web.service.EmployeeManager;
 import com.upa.web.service.HandScanService;
 import com.upa.web.service.HandScanServiceImpl;
+import com.upa.web.service.UserService;
+import com.upa.web.service.UserServiceImpl;
 
 @Configuration
 @EnableWebMvc
@@ -52,6 +54,12 @@ public class ApplicationConfiguration extends WebMvcConfigurerAdapter {
 	@Bean
 	public EmployeeManager getEmployeeManager(){
 		return new EmployeeManager();
+	}
+	
+	@Bean(name="userservice")
+	public UserService userService(){
+		UserServiceImpl userServiceImpl = new UserServiceImpl();
+		return userServiceImpl;
 	}
 	
 	@Bean(name="handScanService")

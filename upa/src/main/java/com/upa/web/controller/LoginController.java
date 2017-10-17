@@ -13,17 +13,16 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.upa.web.beans.MyBean;
 import com.upa.web.model.AppUser;
-import com.upa.web.service.HandScanService;
 import com.upa.web.service.UserService;
 
 import Login.Login;
 
 @Controller
-public class LoginController { //MainController {
-	//MainController is the first java file being executed at tomcat server.
+public class LoginController {
 	
 	private AppUser appuser = new AppUser();
-	//private UserService userservice;
+	
+	private UserService userservice;
 	
 	private MyBean myBean;
 
@@ -32,11 +31,11 @@ public class LoginController { //MainController {
 		this.myBean = myBean;
 	}
 	
-//	@Autowired(required=true)
-//	@Qualifier(value="userservice")
-//	public void UserService(UserService us){
-//		this.userservice = us;
-//	}
+	@Autowired(required=true)
+	@Qualifier(value="userservice")
+	public void UserService(UserService us){
+		this.userservice = us;
+	}
 	
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
@@ -83,9 +82,13 @@ public class LoginController { //MainController {
 		System.out.println("User ID "+ login.getUserId());
 		System.out.println("PASSWORD " + login.getPassword());
 		
-		//boolean isValid = this.userservice.isValidUserPassword(login);
+		boolean isValid = this.userservice.isValidUserPassword(login);
 		
-		return mv;
+		if(isValid == true){
+			return mv;
+		}else{
+			return null;
+		}
 	}
 
 	private List<String> getList() {

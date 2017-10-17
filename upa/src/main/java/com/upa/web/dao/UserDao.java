@@ -29,7 +29,7 @@ public class UserDao {
 		try{
 			tx = session.beginTransaction();
 			String HQL_QUERY = "select * from upa.app_user where user_id = :userId and user_password = :password ";
-			Query query = session.createQuery(HQL_QUERY);
+			Query query = session.createQuery(HQL_QUERY, AppUser.class);
 			query.setParameter("userId", l.getUserId());
 			query.setParameter("password", l.getPassword());
 

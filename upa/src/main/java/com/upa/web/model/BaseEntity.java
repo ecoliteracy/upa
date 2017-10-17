@@ -3,6 +3,7 @@ package com.upa.web.model;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
 
 
 public class BaseEntity {

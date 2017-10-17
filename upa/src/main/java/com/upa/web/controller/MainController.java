@@ -23,7 +23,7 @@ public class MainController {
 	//MainController is the first java file being executed at tomcat server.
 	
 	private AppUser appuser = new AppUser();
-	private UserService userservice;
+	//private UserService userservice;
 	
 	private MyBean myBean;
 
@@ -32,11 +32,11 @@ public class MainController {
 		this.myBean = myBean;
 	}
 	
-	@Autowired(required=true)
-	@Qualifier(value="handScanService")
-	public void UserService(UserService us){
-		this.userservice = us;
-	}
+//	@Autowired(required=true)
+//	@Qualifier(value="userservice")
+//	public void UserService(UserService us){
+//		this.userservice = us;
+//	}
 	
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
@@ -83,7 +83,7 @@ public class MainController {
 		System.out.println("User ID "+ login.getUserId());
 		System.out.println("PASSWORD " + login.getPassword());
 		
-		boolean isValid = this.userservice.isValidUserPassword(l);
+		//boolean isValid = this.userservice.isValidUserPassword(login);
 		
 		return mv;
 	}

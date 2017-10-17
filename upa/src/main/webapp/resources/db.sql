@@ -1,3 +1,32 @@
+/*
+app_user
+*/
+
+
+DROP TABLE IF EXISTS upa.app_user;
+
+CREATE TABLE upa.app_user (
+  USER_NO INT(10) NOT NULL AUTO_INCREMENT primary key,
+  USER_ID VARCHAR(20) NOT NULL,
+  USER_PASSWORD VARCHAR(20) NOT NULL,
+  USER_LAST_LOGIN_DATE DATETIME NULL,
+  TZ_CODE VARCHAR(3) NOT NULL,
+  CREATED_DATE DATETIME NOT NULL,
+  LAST_MODIFIED_DATE DATETIME NOT NULL)
+  ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+insert into upa.app_user (USER_NO,  USER_ID,  USER_PASSWORD,  USER_LAST_LOGIN_DATE,  TZ_CODE,  CREATED_DATE, LAST_MODIFIED_DATE)
+values(1,'KIWASAKI', 'welcome1',  sysdate(), 'US3',  sysdate(),  sysdate());
+
+commit;
+
+
+
+
+/*
+upa_hand_scan
+*/
+
 DROP TABLE IF EXISTS upa.upa_hand_scan_record;
 DROP TABLE IF EXISTS upa.upa_hand_scan;
 
@@ -27,3 +56,6 @@ CREATE TABLE upa.upa_hand_scan_record (
   PRIMARY KEY (RECORD_ID) USING BTREE,
   FOREIGN KEY (HEADER_ID) REFERENCES upa.upa_hand_scan(HEADER_ID))
   ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+  
+  

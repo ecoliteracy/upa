@@ -46,9 +46,12 @@
 	<div>
 		<form:form id="loginForm" method="POST" modelAttribute="login" action="loginProcess" >
 		<div class="logindiv">
-			<input type="text"     class="login" name="userId" placeHolder="User ID" />
-			<input type="password" class="login" name="password"    placeholder="Password" />
+			${message}
+			
+			<input type="text"     class="login" name="userId"   placeHolder="User ID" />
+			<input type="password" class="login" name="password" placeholder="Password" />
 			<button  class="login" type="submit">Log In</button>
+			
 		</div>
 		</form:form>
 		<footer class="footer">

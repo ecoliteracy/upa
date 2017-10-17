@@ -6,10 +6,14 @@ import java.text.SimpleDateFormat;
 import com.upa.web.constant.HandScanConstant;
 import com.upa.web.model.HandScanRecord;
 import com.upa.web.service.HandScanServiceImpl;
+import com.upa.web.service.UserServiceImpl;
+
+import Login.Login;
 //
 public class Test {
 	
 	private static HandScanServiceImpl handscanservice = new HandScanServiceImpl();
+	private static UserServiceImpl userservice = new UserServiceImpl();
 
 	/**
 	 * @param args
@@ -19,7 +23,14 @@ public class Test {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		testMethods1();
+		testLogin();
+	}
+	
+	private static void testLogin(){
+		Login l = new Login();
+		l.setUserId("KIWASAKI");
+		l.setPassword("welcome1");
+		System.out.println(userservice.isValidUserPassword(l));
 	}
 	
 	private static void testMethods1(){

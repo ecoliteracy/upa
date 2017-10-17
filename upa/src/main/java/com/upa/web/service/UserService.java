@@ -4,6 +4,6 @@ import Login.Login;
 
 public interface UserService {
 	
-	public Boolean isValidUserPassword(Login l);
+	public String isValidUserPassword(Login l);
 	
 }

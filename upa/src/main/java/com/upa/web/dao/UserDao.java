@@ -21,18 +21,16 @@ public class UserDao {
 	private SessionFactory sessionFactory;
 	
 	
-	public boolean isValidUserPassword(Login l){
+	public String isValidUserPassword(Login l){
 
 		Session session = sessionFactory.openSession();
 		Transaction tx = null;
 
 		try{
 			tx = session.beginTransaction();
-			String HQL_QUERY = "From AppUser where userId = :userId and userPassword = :password ";
-			//String HQL_QUERY = "From upa.app_user where user_id = 'KIWASAKI' and user_password = 'welcome1' ";
+			String HQL_QUERY = "From AppUser where userId = :userId ";
 			Query query = session.createQuery(HQL_QUERY, AppUser.class);
 			query.setParameter("userId", l.getUserId());
-			query.setParameter("password", l.getPassword());
 
 			System.out.println("++++++++++++");
 			System.out.println(l.getUserId());
@@ -41,19 +39,23 @@ public class UserDao {
 			AppUser hs = (AppUser) query.getSingleResult();
 			
 			if(hs != null){
-				return true;
+				if(hs.getUserPassword().equals(l.getPassword())){
+					return "VALID";	
+				}else{
+					return "WRONG_PASSWORD";
+				}
 			}else{
-				return false;
+				return "NOT_FOUND";
 			}
 			
 
 		}catch (HibernateException e) {
 			if (tx!=null) tx.rollback();
 			e.printStackTrace();
-			return false;
+			return "ERROR";
 		}catch(NoResultException e){
 			e.printStackTrace();
-			return false;
+			return "NOT_FOUND";
 		}finally {
 			session.close(); 
 		}

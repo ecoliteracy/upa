@@ -82,9 +82,9 @@ public class LoginController {
 		System.out.println("User ID "+ login.getUserId());
 		System.out.println("PASSWORD " + login.getPassword());
 		
-		boolean isValid = this.userservice.isValidUserPassword(login);
+		String isValid = this.userservice.isValidUserPassword(login);
 		
-		if(isValid == true){
+		if(isValid.equals("VALID")){
 			return mv;
 		}else{
 			return null;

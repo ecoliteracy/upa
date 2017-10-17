@@ -32,10 +32,6 @@ public class UserDao {
 			Query query = session.createQuery(HQL_QUERY, AppUser.class);
 			query.setParameter("userId", l.getUserId());
 
-			System.out.println("++++++++++++");
-			System.out.println(l.getUserId());
-			System.out.println(l.getPassword());
-			
 			AppUser hs = (AppUser) query.getSingleResult();
 			
 			if(hs != null){
@@ -48,7 +44,6 @@ public class UserDao {
 				return "NOT_FOUND";
 			}
 			
-
 		}catch (HibernateException e) {
 			if (tx!=null) tx.rollback();
 			e.printStackTrace();
@@ -60,5 +55,4 @@ public class UserDao {
 			session.close(); 
 		}
 	}
-
 }

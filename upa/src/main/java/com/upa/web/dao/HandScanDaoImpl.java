@@ -19,7 +19,6 @@ import org.springframework.stereotype.Repository;
 
 import com.upa.web.model.HandScanHeader;
 import com.upa.web.model.HandScanRecord;
-import com.upa.web.model.TestSequence;
 
 @Repository
 public class HandScanDaoImpl implements HandScanDao{
@@ -53,11 +52,7 @@ public class HandScanDaoImpl implements HandScanDao{
         return sqlQuery.toString();
 	}
 
-	@Override
-	public String getTestSequence(TestSequence ts) {
-		sessionFactory.getCurrentSession().save(ts);
-		return "SUCCESS";
-	}
+
 
 	@SuppressWarnings("unchecked")
 	@Override

@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="app_user")
+@Table(schema = "upa", name="app_user")
 public class AppUser extends BaseEntity{
 
 	@Id

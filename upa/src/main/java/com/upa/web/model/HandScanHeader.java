@@ -16,7 +16,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-@Table(name="upa_hand_scan")
+@Table(schema = "upa", name="upa_hand_scan")
 public class HandScanHeader extends BaseEntity{
 
 	@Id

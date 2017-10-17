@@ -19,7 +19,7 @@ import com.upa.web.service.UserService;
 import Login.Login;
 
 @Controller
-public class MainController {
+public class LoginController { //MainController {
 	//MainController is the first java file being executed at tomcat server.
 	
 	private AppUser appuser = new AppUser();

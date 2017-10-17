@@ -17,7 +17,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 @Entity
-@Table(name="upa_hand_scan_record")
+@Table(schema = "upa", name="upa_hand_scan_record")
 public class HandScanRecord extends BaseEntity{
 	
 	@JoinColumn(name="HEADER_ID", nullable=false)

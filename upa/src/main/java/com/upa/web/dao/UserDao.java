@@ -31,11 +31,15 @@ public class UserDao {
 			String HQL_QUERY = "From AppUser where userId = :userId and userPassword = :password ";
 			//String HQL_QUERY = "From upa.app_user where user_id = 'KIWASAKI' and user_password = 'welcome1' ";
 			Query query = session.createQuery(HQL_QUERY, AppUser.class);
-//			query.setParameter("userId", l.getUserId());
-//			query.setParameter("password", l.getPassword());
+			query.setParameter("userId", l.getUserId());
+			query.setParameter("password", l.getPassword());
 
+			System.out.println("++++++++++++");
+			System.out.println(l.getUserId());
+			System.out.println(l.getPassword());
+			
 			AppUser hs = (AppUser) query.getSingleResult();
-
+			
 			if(hs != null){
 				return true;
 			}else{

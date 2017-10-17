@@ -1,22 +1,29 @@
 package com.upa.web.controller;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.upa.web.beans.MyBean;
+import com.upa.web.model.AppUser;
+import com.upa.web.service.HandScanService;
+import com.upa.web.service.UserService;
+
+import Login.Login;
 
 @Controller
 public class MainController {
 	//MainController is the first java file being executed at tomcat server.
+	
+	private AppUser appuser = new AppUser();
+	private UserService userservice;
 	
 	private MyBean myBean;
 
@@ -24,6 +31,13 @@ public class MainController {
 	public void setMyBean(MyBean myBean) {
 		this.myBean = myBean;
 	}
+	
+	@Autowired(required=true)
+	@Qualifier(value="handScanService")
+	public void UserService(UserService us){
+		this.userservice = us;
+	}
+	
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView getdata() {
@@ -33,13 +47,21 @@ public class MainController {
 	    //This is where the default page is set. Depending on the purpose, change the default jsp.	
 		//ModelAndView model = new ModelAndView("index");
 		ModelAndView model = new ModelAndView("login");
+		
+		AppUser appuser = new AppUser();		
+		
+		model.addObject("appuserEntity", appuser);
+		
+
 		model.addObject("lists", list);
 		
+		return model;
 		/*
+		
 		Date date = new Date();
 		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
 		String formattedDate = dateFormat.format(date);
-		*/
+		
 		
 		myBean.setName("OMAME");
 		model.addObject("myBean", myBean);
@@ -49,8 +71,21 @@ public class MainController {
 		Date date = new Date();
 		
 		model.addObject("currentDateTime", dateFormat.format(date).toString());
+		*/
+	}
+	
+
+	@RequestMapping(value = "/loginProcess", method = RequestMethod.POST)
+	public ModelAndView submit(@ModelAttribute Login login){
+		ModelAndView mv = new ModelAndView("index");
+		System.out.println("submit the login user");
 		
-		return model;
+		System.out.println("User ID "+ login.getUserId());
+		System.out.println("PASSWORD " + login.getPassword());
+		
+		boolean isValid = this.userservice.
+		
+		return mv;
 	}
 
 	private List<String> getList() {
@@ -66,6 +101,14 @@ public class MainController {
 
 		return list;
 
+	}
+
+	public AppUser getAppuser() {
+		return appuser;
+	}
+
+	public void setAppuser(AppUser appuser) {
+		this.appuser = appuser;
 	}
 
 }

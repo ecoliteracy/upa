@@ -23,30 +23,30 @@
 <script type="text/javascript" src="resources/js/app.js"></script>
 </head>
 <body>
-<div>
-	<h4>Hand Scan Recorder</h4>
-	First Date: <form:input  disabled="disabled"  enable = "false" path="handScanHeader.firstDate"></form:input><br/>
- 	Last Date : <form:input disabled="disabled"  enable = "false" path="handScanHeader.lastDate"></form:input><br/>
- 	
-</div>
-<form:form method="POST" modelAttribute="handscanEntity" action="submit">
-<div id="handscanApp">
-	<div
-		style="border-width: 1px; border-style: solid; border-color: rgb(125, 125, 125); width: 250px;">
-		<br>
-		<h4>Select Date</h4>
-		<form:input id="datepicker" value="${getCurrentDate}" path="scanDateStr" style="width: 10" />
-		<form:input id="timepicker" value="${getCurrentTime}" path="scanTimeStr" style="width: 10" />
-		<br> <br>
-		<form:radiobutton path="type" name="handscan" value="I" checked="checked" />CLOCK IN
-		<form:radiobutton path="type" name="handscan" value="O" />CLOCK OUT
+	<div>
+		<h4>Hand Scan Recorder</h4>
+		First Date: <form:input  disabled="disabled"  enable = "false" path="handScanHeader.firstDate"></form:input><br/>
+	 	Last Date : <form:input disabled="disabled"  enable = "false" path="handScanHeader.lastDate"></form:input><br/>
+	 	
 	</div>
-	<br>
-	<br>
-	<input type="submit" value="Submit">
-	<button id="primaryTextButton" type="submit" value="submit">Submit</button>
-</div>
-</form:form>
+	<form:form method="POST" modelAttribute="handscanEntity" action="submit">
+	<div id="handscanApp">
+		<div
+			style="border-width: 1px; border-style: solid; border-color: rgb(125, 125, 125); width: 250px;">
+			<br>
+			<h4>Select Date</h4>
+			<form:input id="datepicker" value="${getCurrentDate}" path="scanDateStr" style="width: 10" />
+			<form:input id="timepicker" value="${getCurrentTime}" path="scanTimeStr" style="width: 10" />
+			<br> <br>
+			<form:radiobutton path="type" name="handscan" value="I" checked="checked" />CLOCK IN
+			<form:radiobutton path="type" name="handscan" value="O" />CLOCK OUT
+		</div>
+		<br>
+		<br>
+		<input type="submit" value="Submit">
+		<button id="primaryTextButton" type="submit" value="submit">Submit</button>
+	</div>
+	</form:form>
 </body>
 <script>
 	$(document).ready(function() {

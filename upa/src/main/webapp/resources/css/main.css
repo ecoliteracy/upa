@@ -1,15 +1,5 @@
-h1 {
-	color: green;
-}
-
-.fieldlist {
-	margin: 0 0 -1em;
-	padding: 0;
-}
-
-.fieldlist li {
-	list-style: none;
-	padding-bottom: 1em;
+*{
+	border: 1px solid rgba(0,0,0,0.3);
 }
 
 .outer {
@@ -20,16 +10,52 @@ h1 {
 	padding: 5px;
 }
 
-
-body {
-    background-color: lightblue;
-}
-
-h2 {
-    color: white;
-    text-align: center;
+.loginbody {
+	background-color: Gainsboro;
 }
 
 p {
-    font-family: verdana;
-    font-size: 20px;
+	font-family: verdana;
+	font-size: 20px;
+}
+
+.form-control {
+	display: block;
+	text-align: center;
+}
+
+#userIdInput {
+	display:block;
+}
+
+.login{
+  display:block;
+  width:90%;
+  margin:5%; 
+}
+
+.logindiv {
+  width:300px;
+  position: absolute;
+  margin: auto;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 300px;
+  height:100px;
+}
+
+.footer {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 1rem;
+  background-color: #efefef;
+  text-align: center;
+}
+
+#footerp{
+  font-size: xx-small;
+}

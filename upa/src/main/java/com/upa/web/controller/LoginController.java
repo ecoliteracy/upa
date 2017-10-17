@@ -76,18 +76,29 @@ public class LoginController {
 
 	@RequestMapping(value = "/loginProcess", method = RequestMethod.POST)
 	public ModelAndView submit(@ModelAttribute Login login){
-		ModelAndView mv = new ModelAndView("index");
+		ModelAndView mv = null;
 		System.out.println("submit the login user");
 		
 		System.out.println("User ID "+ login.getUserId());
 		System.out.println("PASSWORD " + login.getPassword());
 		
-		String isValid = this.userservice.isValidUserPassword(login);
+		String rtnrst = this.userservice.isValidUserPassword(login);
 		
-		if(isValid.equals("VALID")){
+		if(rtnrst.equals("VALID")){
+			mv = new ModelAndView("index");
+			return mv;
+		}else if(rtnrst.equals("WRONG_PASSWORD")){
+			mv = new ModelAndView("login");
+			mv.addObject("message", "User Password is incorrect");
+			return mv;
+		}else if(rtnrst.equals("NOT_FOUND")){
+			mv = new ModelAndView("login");
+			mv.addObject("message", "User ID is not valid");
 			return mv;
 		}else{
-			return null;
+			mv = new ModelAndView("login");
+			mv.addObject("message", "Error.  Cannot login.");
+			return mv;
 		}
 	}
 

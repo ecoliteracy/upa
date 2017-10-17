@@ -49,7 +49,7 @@ public class UserDao {
 			e.printStackTrace();
 			return "ERROR";
 		}catch(NoResultException e){
-			e.printStackTrace();
+			//e.printStackTrace();
 			return "NOT_FOUND";
 		}finally {
 			session.close(); 

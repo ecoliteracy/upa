@@ -150,6 +150,11 @@
 		</dependency>
 		
 		
+		
+		<!-- RESTful Web Service -->
+		
+		
+
 	</dependencies>
 	<build>
 		<finalName>upa</finalName>

@@ -4,6 +4,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -29,6 +32,8 @@ public class HandScanController {
 	
 	private static HandScanConstant handscanConstant = new HandScanConstant();
 	
+	private Logger logger = LoggerFactory.getLogger(getClass());
+	
 	private HandScanHeader handscanheader = new HandScanHeader();
 	private HandScanRecord handscanrecord = new HandScanRecord();
 	
@@ -42,8 +47,6 @@ public class HandScanController {
 	
 	@RequestMapping(value="/handscan")
 	public ModelAndView getData(@SessionAttribute("appuser") AppUser appuser){
-		
-		System.out.println("User Id from Session: "+ appuser.getUserId());
 		
 		ModelAndView model  = new ModelAndView("handscan/handscan");
 		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");

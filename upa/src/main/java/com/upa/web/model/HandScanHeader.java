@@ -10,7 +10,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -35,6 +37,9 @@ public class HandScanHeader extends BaseEntity{
 	long totalHour;
 	@Column(name="REMAINING_HOUR")
 	long remainingHour;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name="USER_NO")
+	AppUser appuser;
 	
 	@OneToMany(cascade=CascadeType.ALL,fetch = FetchType.EAGER, mappedBy = "handScanHeader")
 	List<HandScanRecord> handscanrecords;
@@ -99,6 +104,14 @@ public class HandScanHeader extends BaseEntity{
 		this.remainingHour = remainingHour;
 	}
 
+	public AppUser getAppuser() {
+		return appuser;
+	}
+
+	public void setAppuser(AppUser appuser) {
+		this.appuser = appuser;
+	}
+
 	public List<HandScanRecord> getHandscanrecords() {
 		return handscanrecords;
 	}
@@ -106,4 +119,6 @@ public class HandScanHeader extends BaseEntity{
 	public void setHandscanrecords(List<HandScanRecord> handscanrecords) {
 		this.handscanrecords = handscanrecords;
 	}
+
+
 }

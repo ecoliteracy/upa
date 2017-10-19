@@ -7,25 +7,36 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.upa.web.beans.MyBean;
 import com.upa.web.model.AppUser;
+import com.upa.web.model.UserValidationResult;
 import com.upa.web.service.UserService;
 
-import Login.Login;
 
 @Controller
+//@SessionAttributes(value ="appuser", types={AppUser.class})
+@SessionAttributes("appuser")
 public class LoginController {
-	
+	/*
+	 * Add appuser in model attribute
+	 */
+	@ModelAttribute("appuser")
+	public AppUser setUpUserForm() {
+		return new AppUser();
+	}
+		
 	private AppUser appuser = new AppUser();
 	
 	private UserService userservice;
 	
 	private MyBean myBean;
-
+	
 	@Autowired
 	public void setMyBean(MyBean myBean) {
 		this.myBean = myBean;
@@ -55,8 +66,8 @@ public class LoginController {
 		model.addObject("lists", list);
 		
 		return model;
-		/*
 		
+		/*		
 		Date date = new Date();
 		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
 		String formattedDate = dateFormat.format(date);
@@ -74,18 +85,25 @@ public class LoginController {
 	}
 	
 
+	//@ModelAttribute("appuser")
+	//@PostMapping("/loginProcess")
 	@RequestMapping(value = "/loginProcess", method = RequestMethod.POST)
-	public ModelAndView submit(@ModelAttribute Login login){
+	public ModelAndView loginProcess(@ModelAttribute("appuser") AppUser appuser){
 		ModelAndView mv = null;
 		System.out.println("submit the login user");
 		
-		System.out.println("User ID "+ login.getUserId());
-		System.out.println("PASSWORD " + login.getPassword());
+		/*Shortcut for development*/
+		appuser.setUserId("KIWASAKI");
+		appuser.setUserPassword("welcome1");
 		
-		String rtnrst = this.userservice.isValidUserPassword(login);
-		
+		UserValidationResult rs = this.userservice.isValidUserPassword(appuser);
+		String rtnrst = rs.getValidationResult();
+				
 		if(rtnrst.equals("VALID")){
 			mv = new ModelAndView("index");
+//			mv.addObject("appuser", rs.getAppuser());
+//			AppUser au2 = (AppUser)mv.getModel().get("appuser");
+//			System.out.println(au2.getUserId());
 			return mv;
 		}else if(rtnrst.equals("WRONG_PASSWORD")){
 			mv = new ModelAndView("login");

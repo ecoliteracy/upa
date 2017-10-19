@@ -4,11 +4,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import com.upa.web.constant.HandScanConstant;
+import com.upa.web.model.AppUser;
 import com.upa.web.model.HandScanRecord;
 import com.upa.web.service.HandScanServiceImpl;
 import com.upa.web.service.UserServiceImpl;
-
-import Login.Login;
 //
 public class Test {
 	
@@ -27,10 +26,10 @@ public class Test {
 	}
 	
 	private static void testLogin(){
-		Login l = new Login();
+		AppUser l = new AppUser();
 		l.setUserId("KIWASAKI");
-		l.setPassword("welcome1");
-		System.out.println(userservice.isValidUserPassword(l));
+		l.setUserPassword("welcome1");
+		//System.out.println(userservice.isValidUserPassword(l));
 	}
 	
 	private static void testMethods1(){

@@ -1,21 +1,20 @@
 package com.upa.web.controller;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.upa.web.config.ApplicationProperties;
 import com.upa.web.constant.HandScanConstant;
+import com.upa.web.model.AppUser;
 import com.upa.web.model.HandScanHeader;
 import com.upa.web.model.HandScanRecord;
 import com.upa.web.service.HandScanService;
@@ -42,11 +41,19 @@ public class HandScanController {
 	}
 	
 	@RequestMapping(value="/handscan")
-	public ModelAndView getData(){
+	public ModelAndView getData(@SessionAttribute("appuser") AppUser appuser){
+		
+		System.out.println("User Id from Session: "+ appuser.getUserId());
 		
 		ModelAndView model  = new ModelAndView("handscan/handscan");
 		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-		setCurrentDateStr(dateFormat.format(getCurrentTime()));
+		//setCurrentDateStr(dateFormat.format(getCurrentTime()));
+		
+//		AppUser au2 = (AppUser)session.getAttribute("appuser");
+//		System.out.println("1+++++++++++++++");
+//		System.out.println(au2.getUserId());
+//		System.out.println("1+++++++++++++++");
+		
 		model.addObject("getCurrentDate",dateFormat.format(getCurrentTime()));
 		
 		DateFormat timeFormat = new SimpleDateFormat("hh:mm a");
@@ -54,6 +61,7 @@ public class HandScanController {
 		
 		HandScanHeader hsh = this.handscanservice.getHandScanOfTerm(getCurrentTime());
 		System.out.println("+++++++++++++++");
+		
 		if(hsh != null && hsh.getHeaderId() != null){
 			System.out.println("header ID: "+ hsh.getHeaderId());
 			setHandscanheader(hsh);

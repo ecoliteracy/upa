@@ -1,9 +1,10 @@
 package com.upa.web.service;
 
-import Login.Login;
+import com.upa.web.model.AppUser;
+import com.upa.web.model.UserValidationResult;
 
 public interface UserService {
 	
-	public String isValidUserPassword(Login l);
+	public UserValidationResult isValidUserPassword(AppUser l);
 	
 }

@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.upa.web.dao.UserDao;
-
-import Login.Login;
+import com.upa.web.model.AppUser;
+import com.upa.web.model.UserValidationResult;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -17,7 +17,7 @@ public class UserServiceImpl implements UserService {
 		this.userdao = userdao;
 	}
 	
-	public String isValidUserPassword(Login l){		
+	public UserValidationResult isValidUserPassword(AppUser l){		
 		return userdao.isValidUserPassword(l);		
 	}
 	

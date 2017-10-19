@@ -11,8 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.upa.web.model.AppUser;
-
-import Login.Login;
+import com.upa.web.model.UserValidationResult;
 
 @Repository
 public class UserDao {
@@ -21,7 +20,9 @@ public class UserDao {
 	private SessionFactory sessionFactory;
 	
 	
-	public String isValidUserPassword(Login l){
+	public UserValidationResult isValidUserPassword(AppUser l){
+
+		UserValidationResult uvr = new UserValidationResult();
 
 		Session session = sessionFactory.openSession();
 		Transaction tx = null;
@@ -32,25 +33,32 @@ public class UserDao {
 			Query query = session.createQuery(HQL_QUERY, AppUser.class);
 			query.setParameter("userId", l.getUserId());
 
-			AppUser hs = (AppUser) query.getSingleResult();
+			AppUser au = (AppUser) query.getSingleResult();
 			
-			if(hs != null){
-				if(hs.getUserPassword().equals(l.getPassword())){
-					return "VALID";	
+			uvr.setAppuser(au);
+			
+			if(au != null){
+				if(au.getUserPassword().equals(l.getUserPassword())){
+					uvr.setValidationResult("VALID");
+					return uvr;	
 				}else{
-					return "WRONG_PASSWORD";
+					uvr.setValidationResult("WRONG_PASSWORD");
+					return uvr;
 				}
 			}else{
-				return "NOT_FOUND";
+				uvr.setValidationResult("NOT_FOUND");
+				return uvr;
 			}
 			
 		}catch (HibernateException e) {
 			if (tx!=null) tx.rollback();
 			e.printStackTrace();
-			return "ERROR";
+			uvr.setValidationResult("ERROR");
+			return uvr;
 		}catch(NoResultException e){
 			//e.printStackTrace();
-			return "NOT_FOUND";
+			uvr.setValidationResult("NOT_FOUND");
+			return uvr;
 		}finally {
 			session.close(); 
 		}

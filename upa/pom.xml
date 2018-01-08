@@ -23,6 +23,7 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
 			<version>${org.springframework-version}</version>
+
 		</dependency>
 
 		<!-- jstl -->
@@ -151,7 +152,12 @@
 		
 		
 		
-		<!-- RESTful Web Service -->
+		<!-- Logger -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+			<version>1.7.2</version>
+		</dependency>
 		
 		
 

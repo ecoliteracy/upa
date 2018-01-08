@@ -2,7 +2,7 @@ package com.upa.web.service;
 
 import java.util.Date;
 
-import com.upa.web.model.BaseEntity;
+import com.upa.web.model.entity.BaseEntity;
 
 public class EntityUtils {
 	

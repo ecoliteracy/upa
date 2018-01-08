@@ -1,5 +1,7 @@
 package com.upa.web.model;
 
+import com.upa.web.model.entity.AppUser;
+
 public class UserValidationResult {
 	
 	String validationResult;

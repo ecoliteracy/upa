@@ -17,11 +17,11 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.upa.web.model.HandScanHeader;
-import com.upa.web.model.HandScanRecord;
+import com.upa.web.model.entity.HandScanHeader;
+import com.upa.web.model.entity.HandScanRecord;
 
 @Repository
-public class HandScanDaoImpl implements HandScanDao{
+public class HandScanDaoImpl {
 
 	@Autowired
 	private SessionFactory sessionFactory;
@@ -32,19 +32,16 @@ public class HandScanDaoImpl implements HandScanDao{
 		this.sessionFactory=sessionFactory;
 	}
 
-	@Override
 	public String saveHandscan(HandScanRecord handscan){
 		sessionFactory.getCurrentSession().saveOrUpdate(handscan);
 		return "SUCESS";
 	}
 	
-	@Override
 	public String saveHandscanHeader(HandScanHeader hs) {
 		sessionFactory.getCurrentSession().saveOrUpdate(hs);
 		return "SUCCESS";
 	}
-
-	@Override
+	
 	public String getCurrentDate() {
         Session session = sessionFactory.openSession();
         SQLQuery sqlQuery = session.createSQLQuery("select now() as sysdate from dual");
@@ -55,7 +52,6 @@ public class HandScanDaoImpl implements HandScanDao{
 
 
 	@SuppressWarnings("unchecked")
-	@Override
 	public List<HandScanHeader> getHandScan() {
 		//List<HandScanHeader> hsList = (List<HandScanHeader>) sessionFactory.getCurrentSession().createCriteria(HandScanHeader.class);
 		Session session = sessionFactory.openSession();
@@ -78,19 +74,20 @@ public class HandScanDaoImpl implements HandScanDao{
 	}
 	
 	@SuppressWarnings("unchecked")
-	@Override
-	public HandScanHeader getHandScanOfTerm(Date date) {
+	public HandScanHeader getHandScanOfTerm(Date date, String userId) {
 		//List<HandScanHeader> hsList = (List<HandScanHeader>) sessionFactory.getCurrentSession().createCriteria(HandScanHeader.class);
 		Session session = sessionFactory.openSession();
 		Transaction tx = null;
 		try{
 			tx = session.beginTransaction();
 			// Create HQL Between clause
-			String HQL_QUERY = "FROM HandScanHeader where firstDate <= :date";// and lastDate >= :date ";
+			//String HQL_QUERY = "FROM HandScanHeader where firstDate <= :date";// and lastDate >= :date ";
+			String HQL_QUERY = "FROM HandScanHeader where firstDate <= :date and lastDate >= :date and appuser.userId = :userId";//
 
 			Query query = session.createQuery(HQL_QUERY);
 
 			query.setParameter("date", date, TemporalType.DATE);
+			query.setParameter("userId", userId);
 
 			HandScanHeader hs = (HandScanHeader) query.getSingleResult();
 			if(hs != null){
@@ -113,7 +110,6 @@ public class HandScanDaoImpl implements HandScanDao{
 
 	
 	@SuppressWarnings("unchecked")
-	@Override
 	public HandScanHeader getHandScanHeaderById(long id) {
 		//List<HandScanHeader> hsList = (List<HandScanHeader>) sessionFactory.getCurrentSession().createCriteria(HandScanHeader.class);
 		Session session = sessionFactory.openSession();
@@ -146,7 +142,6 @@ public class HandScanDaoImpl implements HandScanDao{
 		}
 	}
 
-	@Override
 	public List<Date> getParticipateTime(Long id) {
 		//List<HandScanHeader> hsList = (List<HandScanHeader>) sessionFactory.getCurrentSession().createCriteria(HandScanHeader.class);
 		List<Date> participationTime = new ArrayList<Date>();

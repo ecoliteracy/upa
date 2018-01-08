@@ -16,8 +16,8 @@ import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.upa.web.model.AppUser;
-import com.upa.web.model.HandScanRecord;
+import com.upa.web.model.entity.AppUser;
+import com.upa.web.model.entity.HandScanRecord;
 
 @Configuration
 @EnableTransactionManagement

@@ -1,7 +1,7 @@
 package com.upa.web.service;
 
 import com.upa.web.constant.HandScanConstant;
-import com.upa.web.model.HandScanRecord;
+import com.upa.web.model.entity.HandScanRecord;
 
 public class HandScanValidation {
 	static HandScanConstant handscanconstant = new HandScanConstant();

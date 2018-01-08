@@ -1,4 +1,4 @@
-package com.upa.web.model;
+package com.upa.web.model.entity;
 
 import java.util.Date;
 import java.util.List;

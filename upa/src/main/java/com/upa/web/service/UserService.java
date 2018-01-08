@@ -1,7 +1,7 @@
 package com.upa.web.service;
 
-import com.upa.web.model.AppUser;
 import com.upa.web.model.UserValidationResult;
+import com.upa.web.model.entity.AppUser;
 
 public interface UserService {
 	

@@ -13,9 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.upa.web.constant.HandScanConstant;
-import com.upa.web.dao.HandScanDao;
-import com.upa.web.model.HandScanHeader;
-import com.upa.web.model.HandScanRecord;
+import com.upa.web.dao.HandScanDaoImpl;
+import com.upa.web.model.entity.HandScanHeader;
+import com.upa.web.model.entity.HandScanRecord;
 
 @Service
 public class HandScanServiceImpl implements HandScanService{
@@ -26,10 +26,10 @@ public class HandScanServiceImpl implements HandScanService{
 	
 	private static HandScanValidation validation = new HandScanValidation();
 	
-	private HandScanDao handscandao;
+	private HandScanDaoImpl handscandao;
 	
 	@Autowired	
-	public void handscandao(HandScanDao hsDAO){
+	public void handscandao(HandScanDaoImpl hsDAO){
 		this.handscandao = hsDAO;
 	}
 		
@@ -71,13 +71,12 @@ public class HandScanServiceImpl implements HandScanService{
 		}
 		
 		//
-		System.out.println("========================");
-		System.out.println("Hand Scan Record");
+		System.out.println("[1]=====HandScanServiceImpl=====");
 		System.out.println(hr.getTz_code());
 		System.out.println(hr.getLast_modified_date());
 		System.out.println(hr.getCreated_date());
 		
-		
+		/*
 		if(h != null && h.getHeaderId() != null){
 			
 			EntityUtils.setupAuditTrail(h, Boolean.FALSE);
@@ -93,12 +92,12 @@ public class HandScanServiceImpl implements HandScanService{
 			h.setTermType(handscanConstant.TERM_GOAL);
 			EntityUtils.setupAuditTrail(h, Boolean.TRUE);
 		}
+		*/
 		
-		System.out.println("Hand Scan Header");
+		System.out.println("[2]=====HandScanServiceImpl=====");
 		System.out.println(h.getTz_code());
 		System.out.println(h.getLast_modified_date());
 		System.out.println(h.getCreated_date());
-		System.out.println("========================");
 		
 		hr.setParticipationTime(getHourInRecord(hr));
 		if(hr.getParticipationTime()!=null){
@@ -114,7 +113,13 @@ public class HandScanServiceImpl implements HandScanService{
 			h.setRemainingHour(0L);
 		}
 		
-		
+		System.out.println("[3]=====HandScanServiceImpl=====");
+		System.out.println(h.getAppuser().getUserNo());
+		System.out.println(h.getFirstDate());
+		System.out.println(h.getLastDate());
+		System.out.println(h.getRemainingHour());
+		System.out.println(h.getTermType());
+		System.out.println(h.getTotalHour());
 		hr.setHandScanHeader(h);
 		
 		handscandao.saveHandscan(hr);
@@ -208,8 +213,8 @@ public class HandScanServiceImpl implements HandScanService{
 		return null;
 	}
 
-	public HandScanHeader getHandScanOfTerm(Date dt) {
-		HandScanHeader h = handscandao.getHandScanOfTerm(dt);
+	public HandScanHeader getHandScanOfTerm(Date dt, String userId) {
+		HandScanHeader h = handscandao.getHandScanOfTerm(dt, userId);
 		if(h != null && h.getHandscanrecords() != null && h.getHandscanrecords().size() > 0){
 			h.setTotalHour(getSumOfParticipation(h.getHandscanrecords()));
 			h.setRemainingHour(getSubtrHrMin(getHourMin(handscanConstant.TERM_GOAL+":00"), h.getTotalHour()));

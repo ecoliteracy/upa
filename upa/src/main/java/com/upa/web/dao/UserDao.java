@@ -10,8 +10,8 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.upa.web.model.AppUser;
 import com.upa.web.model.UserValidationResult;
+import com.upa.web.model.entity.AppUser;
 
 @Repository
 public class UserDao {

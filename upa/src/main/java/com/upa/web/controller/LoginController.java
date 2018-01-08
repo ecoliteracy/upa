@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.upa.web.beans.MyBean;
-import com.upa.web.model.AppUser;
 import com.upa.web.model.UserValidationResult;
+import com.upa.web.model.entity.AppUser;
 import com.upa.web.service.UserService;
 
 
@@ -60,28 +60,11 @@ public class LoginController {
 		
 		AppUser appuser = new AppUser();		
 		
-		model.addObject("appuserEntity", appuser);
-		
+		model.addObject("appuser", appuser);		
 
 		model.addObject("lists", list);
 		
 		return model;
-		
-		/*		
-		Date date = new Date();
-		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
-		String formattedDate = dateFormat.format(date);
-		
-		
-		myBean.setName("OMAME");
-		model.addObject("myBean", myBean);
-		model.addObject("errorMsg", null);
-		
-		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		Date date = new Date();
-		
-		model.addObject("currentDateTime", dateFormat.format(date).toString());
-		*/
 	}
 	
 
@@ -90,7 +73,6 @@ public class LoginController {
 	@RequestMapping(value = "/loginProcess", method = RequestMethod.POST)
 	public ModelAndView loginProcess(@ModelAttribute("appuser") AppUser appuser){
 		ModelAndView mv = null;
-		System.out.println("submit the login user");
 		
 		/*Shortcut for development*/
 		appuser.setUserId("KIWASAKI");
@@ -101,9 +83,8 @@ public class LoginController {
 				
 		if(rtnrst.equals("VALID")){
 			mv = new ModelAndView("index");
-//			mv.addObject("appuser", rs.getAppuser());
-//			AppUser au2 = (AppUser)mv.getModel().get("appuser");
-//			System.out.println(au2.getUserId());
+			appuser = rs.getAppuser();
+			mv.addObject("appuser", appuser);
 			return mv;
 		}else if(rtnrst.equals("WRONG_PASSWORD")){
 			mv = new ModelAndView("login");

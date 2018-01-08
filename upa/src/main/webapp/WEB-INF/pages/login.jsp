@@ -44,13 +44,13 @@
 
 <body class="loginbody container-fluid">
 	<div>
-		<form:form id="loginForm" method="POST" modelAttribute="login" action="loginProcess" >
+		<form:form id="loginForm" method="POST" modelAttribute="appuser" action="loginProcess" >
 		<div class="logindiv">
 			${message}
 			
-			<input type="text"     class="login" name="userId"   placeHolder="User ID" />
-			<input type="password" class="login" name="password" placeholder="Password" />
-			<button  class="login" type="submit">Log In</button>
+			<input type="text"     class="login" name="userId"       placeHolder="User ID" />
+			<input type="password" class="login" name="userPassword" placeholder="Password" />
+			<button class="login" type="submit">Log In</button>
 			
 		</div>
 		</form:form>

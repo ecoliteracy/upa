@@ -26,7 +26,8 @@
 		<h4>Hand Scan Recorder</h4>
 		First Date:
 		<form:input id="firstdatepicker" 
-			path="handscan.firstDate"></form:input><br /> 
+			path="handScanHeader.firstDate"
+			readonly='${updateAccess.fieldAccess}' ></form:input><br /> 
 		Billing Period: 
 		<select id="billingperiodselect" name="item"
 			onchange="addDateToLastDate()">
@@ -39,11 +40,11 @@
 		</select><br /> 
 		Last Date :
 		<form:input id="lastdatepicker"
-			path="handscan.lastDate"></form:input>
+			path="handScanHeader.lastDate" readonly='${updateAccess.fieldAccess}'></form:input>
 		<br />
 
 	</div>
-	<form:form method="POST" modelAttribute="handscan" action="submit">
+	<form:form method="POST" modelAttribute="handScanRecord" action="submit">
 	<div id="handscanApp">
 		<div
 			style="border-width: 1px; border-style: solid; border-color: rgb(125, 125, 125); width: 250px;">
@@ -52,8 +53,8 @@
 			<form:input id="datepicker" value="${getCurrentDate}" path="scanDateStr" style="width: 10" />
 			<form:input id="timepicker" value="${getCurrentTime}" path="scanTimeStr" style="width: 10" />
 			<br> <br>
-			<form:radiobutton path="clockInOut" name="handscan" value="I" checked="checked" />CLOCK IN
-			<form:radiobutton path="clockInOut" name="handscan" value="O" />CLOCK OUT
+			<form:radiobutton path="type" name="handscan" value="I" checked="checked" />CLOCK IN
+			<form:radiobutton path="type" name="handscan" value="O" />CLOCK OUT
 		</div>
 		<br>
 		<br>

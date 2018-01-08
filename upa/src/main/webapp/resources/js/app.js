@@ -1,3 +1,36 @@
+function addDateToLastDate(){
+	var datepicker1 = document.getElementById("firstdatepicker").value;
+	var billingperiodselect = document.getElementById("billingperiodselect").value;
+	//https://stackoverflow.com/questions/3818193/how-to-add-number-of-days-to-todays-date
+	var date = new Date(datepicker1);
+
+	if(billingperiodselect == 1){
+		date = dateformat(date,0,1,0);
+	}else if(billingperiodselect == 2){
+		date = dateformat(date,0,0,14);
+	}else if(billingperiodselect == 3){
+		date = dateformat(date,0,0,13);
+	}else if(billingperiodselect == 4){
+		date = dateformat(date,0,0,6);
+	}else if(billingperiodselect == 5){
+		date = dateformat(date,0,0,1);
+	}
+	document.getElementById("lastdatepicker").value = date;
+}
+
+function dateformat(date,y,m,d){
+	//https://jsfiddle.net/taditdash/8FHwL/
+	var newdate = date;
+    newdate.setYear(newdate.getFullYear()+y);    
+    newdate.setMonth(newdate.getMonth()+m);
+    newdate.setDate(newdate.getDate()+d);    
+   	var yyyy = newdate.getFullYear();
+   	var mm = newdate.getMonth()+1; // getMonth() is zero-based
+   	var dd  = newdate.getDate();
+   	var newval = mm+"/"+dd+"/"+yyyy; // Leading zeros for mm and dd
+   return newval;
+}
+
 function testing() {
 	alert( "test" );
 	if ("c" + "a" + "t" === "cat") {
@@ -37,7 +70,6 @@ function getCurrentDateTimeString() {
 }
 
 //Calendar Module
-
 var getDatee = new Date();
 var monthe = getDatee.getMonth();
 var yeare = getDatee.getFullYear();

@@ -12,12 +12,11 @@
 <link rel="stylesheet" type="text/css" href="resources/css/main.css">
 <link rel="stylesheet" href="resources/styles/kendo.common.min.css" />
 <link rel="stylesheet" href="resources/styles/kendo.default.min.css" />
-<link rel="stylesheet"
-	href="resources/styles/kendo.default.mobile.min.css" />
-<script type="text/javascript" src="resources/js/app.js"></script>
+<link rel="stylesheet" 	href="resources/styles/kendo.default.mobile.min.css" />
 <script src="resources/js/jquery.min.js"></script>
 <script src="resources/js/kendo.all.min.js"></script>
-<link href='resources/css/calendar.css' rel='stylesheet' type='text/css'>
+<script type="text/javascript" src="resources/js/app.js"></script>
+
 </head>
 <h1>CSS TEXT is populated</h1>
 <h2>You are now at mytest.jsp</h2>
@@ -25,6 +24,9 @@
 <h3>
 	<a href="third">Click Here</a>
 </h3>
+
+<button name="button" value="OK" type="button" onclick="hello()">Click Here to test Java Script</button>
+
 
 <h1>The time on the server is ${myBean.toString()}</h1>
 <c:if test="${not empty lists}">

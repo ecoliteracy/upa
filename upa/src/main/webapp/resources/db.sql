@@ -1,8 +1,6 @@
 /*
 app_user
 */
-
-
 DROP TABLE IF EXISTS upa.app_user;
 
 CREATE TABLE upa.app_user (
@@ -20,13 +18,9 @@ values(1,'KIWASAKI', 'welcome1',  sysdate(), 'US3',  sysdate(),  sysdate());
 
 commit;
 
-
-
-
 /*
 upa_hand_scan
 */
-
 DROP TABLE IF EXISTS upa.upa_hand_scan_record;
 DROP TABLE IF EXISTS upa.upa_hand_scan;
 
@@ -37,9 +31,11 @@ CREATE TABLE upa.upa_hand_scan (
   LAST_DATE DATE NOT NULL,
   TOTAL_HOUR INT NULL,
   REMAINING_HOUR INT NULL,
+  USER_NO INT(10) NOT NULL,
   TZ_CODE VARCHAR(3) NOT NULL,
   CREATED_DATE DATETIME NOT NULL,
-  LAST_MODIFIED_DATE DATETIME NOT NULL)
+  LAST_MODIFIED_DATE DATETIME NOT NULL,
+  FOREIGN KEY (USER_NO) REFERENCES upa.app_user(USER_NO))
   ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -56,6 +52,3 @@ CREATE TABLE upa.upa_hand_scan_record (
   PRIMARY KEY (RECORD_ID) USING BTREE,
   FOREIGN KEY (HEADER_ID) REFERENCES upa.upa_hand_scan(HEADER_ID))
   ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-  
-  

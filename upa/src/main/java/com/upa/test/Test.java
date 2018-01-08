@@ -4,8 +4,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import com.upa.web.constant.HandScanConstant;
-import com.upa.web.model.AppUser;
-import com.upa.web.model.HandScanRecord;
+import com.upa.web.model.entity.AppUser;
+import com.upa.web.model.entity.HandScanRecord;
 import com.upa.web.service.HandScanServiceImpl;
 import com.upa.web.service.UserServiceImpl;
 //

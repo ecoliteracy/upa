@@ -4,7 +4,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +16,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.upa.web.config.ApplicationProperties;
 import com.upa.web.constant.HandScanConstant;
-import com.upa.web.model.AppUser;
-import com.upa.web.model.HandScanHeader;
-import com.upa.web.model.HandScanRecord;
+import com.upa.web.model.HandScan;
+import com.upa.web.model.entity.AppUser;
+import com.upa.web.model.entity.HandScanHeader;
+import com.upa.web.model.entity.HandScanRecord;
 import com.upa.web.service.HandScanService;
 
 @Controller
@@ -36,7 +36,10 @@ public class HandScanController {
 	
 	private HandScanHeader handscanheader = new HandScanHeader();
 	private HandScanRecord handscanrecord = new HandScanRecord();
+	//private HandScan handscan = new HandScan();
 	
+	private AppUser appuserContext;
+
 	private String currentDateStr;
 	
 	@Autowired(required=true)
@@ -47,66 +50,69 @@ public class HandScanController {
 	
 	@RequestMapping(value="/handscan")
 	public ModelAndView getData(@SessionAttribute("appuser") AppUser appuser){
-		
+		//forwards to handscan.jsp
 		ModelAndView model  = new ModelAndView("handscan/handscan");
-		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-		//setCurrentDateStr(dateFormat.format(getCurrentTime()));
 		
-//		AppUser au2 = (AppUser)session.getAttribute("appuser");
-//		System.out.println("1+++++++++++++++");
-//		System.out.println(au2.getUserId());
-//		System.out.println("1+++++++++++++++");
+		HandScan hs = new HandScan();
 		
-		model.addObject("getCurrentDate",dateFormat.format(getCurrentTime()));
+		String userId = appuser.getUserId();
 		
-		DateFormat timeFormat = new SimpleDateFormat("hh:mm a");
-		model.addObject("getCurrentTime", timeFormat.format(getCurrentTime()));
-		
-		HandScanHeader hsh = this.handscanservice.getHandScanOfTerm(getCurrentTime());
-		System.out.println("+++++++++++++++");
+		HandScanHeader hsh = this.handscanservice.getHandScanOfTerm(getCurrentTime(), userId);
 		
 		if(hsh != null && hsh.getHeaderId() != null){
 			System.out.println("header ID: "+ hsh.getHeaderId());
 			setHandscanheader(hsh);
 		}else{
 			System.out.println("header ID: NULL - new HandScanHeader()");
-			setHandscanheader(new HandScanHeader());
 		}
-		System.out.println("+++++++++++++++");
+		
+		/*Clockin and out information*/
+		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+		//setCurrentDateStr(dateFormat.format(getCurrentTime()));
+		model.addObject("getCurrentDate",dateFormat.format(getCurrentTime()));
+		DateFormat timeFormat = new SimpleDateFormat("hh:mm a");
+		model.addObject("getCurrentTime", timeFormat.format(getCurrentTime()));
+		
 		
 		//setHandscanheaderList(this.handscanservice.getHandScanList());
-		model.addObject("handScanHeader", getHandscanheader());
-		
-		model.addObject("handscanEntity", new HandScanRecord());
+		model.addObject("handscan", new HandScan());
+		model.addObject("handScanRecord", new HandScanRecord());		
 		
 		return model;
 	}
 	
+
+	
 	@RequestMapping("/submit")
-	public ModelAndView submit(@ModelAttribute HandScanRecord hs){
+	public ModelAndView submit(@SessionAttribute("appuser") AppUser appuser, @ModelAttribute HandScan hs){
 		
 		String status = null;
-		setHandscanrecord(hs);
+		
+		System.out.println("HandScanController @ submit()");
+		System.out.println(getHandscanheader().getHeaderId());
+		System.out.println(hs.getFirstDate());
+		System.out.println(hs.getLastDate());
+		
+		System.out.println();
+		
 		
 		if(getHandscanheader() != null && getHandscanheader().getHeaderId() != null){
-			setHandscanrecord(this.handscanservice.getMatchingHandScanRecord(getHandscanheader(), hs.getScanDateStr()));
+			//setHandscanrecord(this.handscanservice.getMatchingHandScanRecord(getHandscanheader(), hs.getScanDateStr()));
 		}
 		
 		if(getHandscanrecord() != null && getHandscanrecord().getRecordId() != null) {
-			System.out.println(" ======== FOUND RECORD ======= ");
+			System.out.println("[1]======== FOUND RECORD ======= ");
 			System.out.println("getHandscanrecord().getRecordId() :  "+ getHandscanrecord().getRecordId());
-			getHandscanrecord().setScanDateStr(hs.getScanDateStr());
-			getHandscanrecord().setScanTimeStr(hs.getScanTimeStr());
-			getHandscanrecord().setType(hs.getType());
+
 			status = this.handscanservice.addHandScanRecordUpdateHeader(getHandscanrecord(), getHandscanheader());
 		}else{
-			System.out.println(" ======== NOT FOUND RECORD ======= ");
-			setHandscanrecord(hs);
+			System.out.println("[2]======== NOT FOUND RECORD ======= ");
+			
 			status = this.handscanservice.addHandScan(getHandscanrecord(), getHandscanheader());
 		}
 		
 		ModelAndView mv = new ModelAndView("handscan/handScanResult");
-		
+				
 		if(status==null){
 			mv.addObject("handScansList", this.handscanservice.getHandScanList());
 			mv.addObject("msg", "The HandScan has been submitted.");
@@ -147,6 +153,12 @@ public class HandScanController {
 	public void setHandscanheader(HandScanHeader handscanheader) {
 		this.handscanheader = handscanheader;
 	}
-	
 
+	public AppUser getAppuserContext() {
+		return appuserContext;
+	}
+
+	public void setAppuserContext(AppUser appuserContext) {
+		this.appuserContext = appuserContext;
+	}
 }

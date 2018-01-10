@@ -24,7 +24,7 @@
 	<h2>${appuser.loginId}</h2>
 
 	<h2>Current Date Time: ${currentDateTime}</h2>
-	<c:set var="test" scope="request" value="${requestScope.userDetails }"></c:set>
+	<c:set var="test" scope="request" value="${requestScope.userDetails}"></c:set>
 
 	<h3>
 		<a href="handscan">Hand Scan Menu</a><br><br> 

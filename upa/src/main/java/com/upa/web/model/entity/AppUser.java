@@ -2,11 +2,15 @@ package com.upa.web.model.entity;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -14,39 +18,44 @@ import javax.persistence.Table;
 public class AppUser extends BaseEntity{
 
 	@Id
-	@Column(name="USER_NO", unique = true, nullable = false)
+	@Column(name="USER_ID", unique = true, nullable = false)
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	Long userNo;
-	@Column(name="USER_ID")
-	String userId;
+	Long userId;
+	@Column(name="LOGIN_ID")
+	String loginId;
 	@Column(name="USER_PASSWORD")
 	String userPassword;
 	@Column(name="USER_LAST_LOGIN_DATE")
 	Date userLastLoginDate;
-	
+	@JoinColumn(name="ORG_SP_ID", nullable=true)
+	@ManyToOne(cascade=CascadeType.PERSIST, fetch = FetchType.LAZY)
+	OrgSalaryPattern orgSalaryPattern;
+
+
+
 	public AppUser(){};
 	
-	public AppUser(Long userNo, String userId, String userPassword, Date userLastLoginDate){
-		this.userNo = userNo;
+	public AppUser(Long userId, String loginId, String userPassword, Date userLastLoginDate){
 		this.userId = userId;
+		this.loginId = loginId;
 		this.userPassword = userPassword;
 		this.userLastLoginDate = userLastLoginDate;
 	}
 
-	public Long getUserNo() {
-		return userNo;
-	}
-
-	public void setUserNo(Long userNo) {
-		this.userNo = userNo;
-	}
-
-	public String getUserId() {
+	public Long getUserId() {
 		return userId;
 	}
 
-	public void setUserId(String userId) {
+	public void setUserId(Long userId) {
 		this.userId = userId;
+	}
+
+	public String getLoginId() {
+		return loginId;
+	}
+
+	public void setLoginId(String loginId) {
+		this.loginId = loginId;
 	}
 
 	public String getUserPassword() {
@@ -64,5 +73,12 @@ public class AppUser extends BaseEntity{
 	public void setUserLastLoginDate(Date userLastLoginDate) {
 		this.userLastLoginDate = userLastLoginDate;
 	}
+	
+	public OrgSalaryPattern getOrgSalaryPattern() {
+		return orgSalaryPattern;
+	}
 
+	public void setOrgSalaryPattern(OrgSalaryPattern orgSalaryPattern) {
+		this.orgSalaryPattern = orgSalaryPattern;
+	}
 }

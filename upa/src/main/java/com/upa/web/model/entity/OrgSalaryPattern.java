@@ -1,6 +1,7 @@
 package com.upa.web.model.entity;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -11,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -38,6 +40,9 @@ public class OrgSalaryPattern extends BaseEntity{
 	
 	@Column(name="FREQUENCY_TYPE")
 	String frequencyType;
+	
+	@OneToMany(cascade=CascadeType.PERSIST, fetch=FetchType.EAGER, mappedBy="orgSalaryPattern")
+	List<AppUser> appUser;
 	
 	public OrgSalaryPattern(){};
 	
@@ -89,20 +94,3 @@ public class OrgSalaryPattern extends BaseEntity{
 		this.frequencyType = frequencyType;
 	}
 }
-
-
-/*
-DROP TABLE IF EXISTS upa.upa_org_salary_pattern;
-CREATE TABLE upa.upa_org_salary_pattern (
-  ORG_SP_ID INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  ORG_ID INT(10) NOT NULL,
-  FIRST_DATE DATE NOT NULL,
-  LAST_DATE DATE NOT NULL,
-  FREQUENCY_TYPE VARCHAR(3) NOT NULL, 
-  TZ_CODE VARCHAR(3) NOT NULL,
-  CREATED_DATE DATETIME NOT NULL,
-  LAST_MODIFIED_DATE DATETIME NOT NULL, 
-  PRIMARY KEY (ORG_SP_ID) USING BTREE,
-  FOREIGN KEY (ORG_ID) REFERENCES upa.upa_organization(ORG_ID))
-  ENGINE=InnoDB DEFAULT CHARSET=utf8;
- */

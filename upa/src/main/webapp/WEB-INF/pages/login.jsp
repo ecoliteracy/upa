@@ -48,7 +48,7 @@
 		<div class="logindiv">
 			${message}
 			
-			<input type="text"     class="login" name="userId"       placeHolder="User ID" />
+			<input type="text"     class="login" name="loginId"       placeHolder="User Login ID" />
 			<input type="password" class="login" name="userPassword" placeholder="Password" />
 			<button class="login" type="submit">Log In</button>
 			

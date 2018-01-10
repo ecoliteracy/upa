@@ -51,6 +51,8 @@ public class LoginController {
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView getdata() {
+		System.out.println("LoginController.getdata");
+
 		
 		List<String> list = getList();
 
@@ -72,10 +74,12 @@ public class LoginController {
 	//@PostMapping("/loginProcess")
 	@RequestMapping(value = "/loginProcess", method = RequestMethod.POST)
 	public ModelAndView loginProcess(@ModelAttribute("appuser") AppUser appuser){
+		
+		System.out.println("LoginController.loginProcess");
 		ModelAndView mv = null;
 		
 		/*Shortcut for development*/
-		appuser.setUserId("KIWASAKI");
+		appuser.setLoginId("KIWASAKI");
 		appuser.setUserPassword("welcome1");
 		
 		UserValidationResult rs = this.userservice.isValidUserPassword(appuser);

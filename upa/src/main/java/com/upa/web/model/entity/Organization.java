@@ -62,17 +62,3 @@ public class Organization extends BaseEntity{
 		this.orgName = orgName;
 	}
 }
-
-
-
-/*
-DROP TABLE IF EXISTS upa.upa_organization;
-CREATE TABLE upa.upa_organization (
-  ORG_ID INT(10) NOT NULL AUTO_INCREMENT primary key,
-  ORG_TYPE VARCHAR(3) NOT NULL,
-  ORG_NAME VARCHAR(50) NOT NULL,
-  TZ_CODE VARCHAR(3) NOT NULL,
-  CREATED_DATE DATETIME NOT NULL,
-  LAST_MODIFIED_DATE DATETIME NOT NULL)
-  ENGINE=InnoDB DEFAULT CHARSET=utf8;
- */

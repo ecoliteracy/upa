@@ -55,7 +55,7 @@ public class HandScanController {
 		
 		HandScan hs = new HandScan();
 		
-		String userId = appuser.getUserId();
+		String userId = appuser.getLoginId();
 		
 		HandScanHeader hsh = this.handscanservice.getHandScanOfTerm(getCurrentTime(), userId);
 		

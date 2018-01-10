@@ -114,7 +114,7 @@ public class HandScanServiceImpl implements HandScanService{
 		}
 		
 		System.out.println("[3]=====HandScanServiceImpl=====");
-		System.out.println(h.getAppuser().getUserNo());
+		System.out.println(h.getAppuser().getUserId());
 		System.out.println(h.getFirstDate());
 		System.out.println(h.getLastDate());
 		System.out.println(h.getRemainingHour());

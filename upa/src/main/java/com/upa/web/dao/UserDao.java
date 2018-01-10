@@ -29,9 +29,9 @@ public class UserDao {
 
 		try{
 			tx = session.beginTransaction();
-			String HQL_QUERY = "From AppUser where userId = :userId ";
+			String HQL_QUERY = "From AppUser where loginId = :loginId ";
 			Query query = session.createQuery(HQL_QUERY, AppUser.class);
-			query.setParameter("userId", l.getUserId());
+			query.setParameter("loginId", l.getLoginId());
 
 			AppUser au = (AppUser) query.getSingleResult();
 			

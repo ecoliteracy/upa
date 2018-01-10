@@ -21,7 +21,7 @@
 		onclick="getCurrentDateString()" />
 			 -->
 
-	<h2>${appuser.userId}</h2>
+	<h2>${appuser.loginId}</h2>
 
 	<h2>Current Date Time: ${currentDateTime}</h2>
 	<c:set var="test" scope="request" value="${requestScope.userDetails }"></c:set>

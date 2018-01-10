@@ -25,6 +25,9 @@ public class HandScanHeader extends BaseEntity{
 	@Column(name="HEADER_ID", unique = true, nullable = false)
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	Long headerId;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name="USER_ID")
+	AppUser appuser;
 	@Column(name="TERM_TYPE")
 	String termType;
 	@Temporal(TemporalType.DATE)
@@ -37,9 +40,7 @@ public class HandScanHeader extends BaseEntity{
 	long totalHour;
 	@Column(name="REMAINING_HOUR")
 	long remainingHour;
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="USER_NO")
-	AppUser appuser;
+
 	
 	@OneToMany(cascade=CascadeType.ALL,fetch = FetchType.EAGER, mappedBy = "handScanHeader")
 	List<HandScanRecord> handscanrecords;

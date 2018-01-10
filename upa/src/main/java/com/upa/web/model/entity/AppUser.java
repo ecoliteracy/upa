@@ -11,6 +11,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 @Entity
@@ -30,9 +32,10 @@ public class AppUser extends BaseEntity{
 	@JoinColumn(name="ORG_SP_ID", nullable=true)
 	@ManyToOne(cascade=CascadeType.PERSIST, fetch = FetchType.LAZY)
 	OrgSalaryPattern orgSalaryPattern;
-
-
-
+	@OneToOne(cascade=CascadeType.PERSIST, fetch=FetchType.EAGER)
+	@PrimaryKeyJoinColumn
+	UserSalaryType userSalaryType;
+	
 	public AppUser(){};
 	
 	public AppUser(Long userId, String loginId, String userPassword, Date userLastLoginDate){
@@ -80,5 +83,13 @@ public class AppUser extends BaseEntity{
 
 	public void setOrgSalaryPattern(OrgSalaryPattern orgSalaryPattern) {
 		this.orgSalaryPattern = orgSalaryPattern;
+	}
+
+	public UserSalaryType getUserSalaryType() {
+		return userSalaryType;
+	}
+
+	public void setUserSalaryType(UserSalaryType userSalaryType) {
+		this.userSalaryType = userSalaryType;
 	}
 }

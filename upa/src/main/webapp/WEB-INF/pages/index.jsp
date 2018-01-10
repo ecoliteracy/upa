@@ -31,7 +31,9 @@
 		<a href="calendar">Calendar Test</a><br><br>
 		<a href="mytest">My Sandbox - all samples are here</a><br><br>
 		<a href="showEmployeeForm">Add Employee</a><br><br>
-		<button href="showEmployeeForm" value="Add Employee"></button>
+		<a href="organizationView">Add Company</a><br><br>
+		<button href="showEmployeeForm" value="Add Employee"></button><br><br>
+		
 		<a href="logout">Logout</a><br><br>
 	</h3>
 

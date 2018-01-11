@@ -1,4 +1,4 @@
-package com.upa.web.service;
+package com.upa.service;
 
 import com.upa.web.constant.HandScanConstant;
 import com.upa.web.model.entity.HandScanRecord;

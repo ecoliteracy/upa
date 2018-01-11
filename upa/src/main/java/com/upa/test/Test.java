@@ -3,11 +3,11 @@ package com.upa.test;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import com.upa.service.HandScanServiceImpl;
+import com.upa.service.UserServiceImpl;
 import com.upa.web.constant.HandScanConstant;
 import com.upa.web.model.entity.AppUser;
 import com.upa.web.model.entity.HandScanRecord;
-import com.upa.web.service.HandScanServiceImpl;
-import com.upa.web.service.UserServiceImpl;
 //
 public class Test {
 	

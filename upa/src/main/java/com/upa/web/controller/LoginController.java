@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.upa.service.UserService;
 import com.upa.web.beans.MyBean;
 import com.upa.web.model.UserValidationResult;
 import com.upa.web.model.entity.AppUser;
-import com.upa.web.service.UserService;
 
 
 @Controller

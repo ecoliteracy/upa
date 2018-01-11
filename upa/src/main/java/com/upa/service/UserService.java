@@ -1,4 +1,4 @@
-package com.upa.web.service;
+package com.upa.service;
 
 import com.upa.web.model.UserValidationResult;
 import com.upa.web.model.entity.AppUser;

@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.upa.service.HandScanService;
 import com.upa.web.config.ApplicationProperties;
 import com.upa.web.constant.HandScanConstant;
 import com.upa.web.model.HandScan;
 import com.upa.web.model.entity.AppUser;
 import com.upa.web.model.entity.HandScanHeader;
 import com.upa.web.model.entity.HandScanRecord;
-import com.upa.web.service.HandScanService;
 
 @Controller
 public class HandScanController {

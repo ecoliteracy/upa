@@ -14,12 +14,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
+import com.upa.service.EmployeeManager;
+import com.upa.service.HandScanService;
+import com.upa.service.HandScanServiceImpl;
+import com.upa.service.UserService;
+import com.upa.service.UserServiceImpl;
 import com.upa.web.beans.MyBean;
-import com.upa.web.service.EmployeeManager;
-import com.upa.web.service.HandScanService;
-import com.upa.web.service.HandScanServiceImpl;
-import com.upa.web.service.UserService;
-import com.upa.web.service.UserServiceImpl;
 
 @Configuration
 @EnableWebMvc

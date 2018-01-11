@@ -1,4 +1,4 @@
-package com.upa.web.service;
+package com.upa.service;
 
 import java.text.DateFormat;
 import java.text.ParseException;

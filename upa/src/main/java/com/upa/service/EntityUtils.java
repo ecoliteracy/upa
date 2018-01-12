@@ -7,12 +7,11 @@ import com.upa.web.model.entity.BaseEntity;
 public class EntityUtils {
 	
 	public static void setupAuditTrail(BaseEntity entity, boolean isCreate) {
+		entity.setLastModifiedDate(new Date());
+		entity.setTzCode("CDT");
+		
 		if (isCreate) {
-			entity.setTz_code("CDT");
-			entity.setCreated_date(new Date());
-			entity.setLast_modified_date(new Date());
-		}else{
-			entity.setLast_modified_date(new Date());
+			entity.setCreatedDate(new Date());
 		}
 	}
 }

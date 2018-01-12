@@ -17,13 +17,15 @@ import org.springframework.web.servlet.view.JstlView;
 import com.upa.service.EmployeeManager;
 import com.upa.service.HandScanService;
 import com.upa.service.HandScanServiceImpl;
+import com.upa.service.OrganizationService;
+import com.upa.service.OrganizationServiceImpl;
 import com.upa.service.UserService;
 import com.upa.service.UserServiceImpl;
 import com.upa.web.beans.MyBean;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = "com.upa.web")
+@ComponentScan(basePackages = "com.upa")//@ComponentScan(basePackages = "com.upa.web")
 @Import(value = {HibernateConfig.class, ApplicationProperties.class})
 public class ApplicationConfiguration extends WebMvcConfigurerAdapter {
 
@@ -60,6 +62,12 @@ public class ApplicationConfiguration extends WebMvcConfigurerAdapter {
 	public UserService userService(){
 		UserServiceImpl userServiceImpl = new UserServiceImpl();
 		return userServiceImpl;
+	}
+	
+	@Bean(name="orgSrv")
+	public OrganizationService organizationService(){
+		OrganizationServiceImpl organizationServiceImpl = new OrganizationServiceImpl();
+		return organizationServiceImpl;
 	}
 	
 	@Bean(name="handScanService")

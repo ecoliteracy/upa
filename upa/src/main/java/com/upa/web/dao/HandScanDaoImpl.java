@@ -34,7 +34,7 @@ public class HandScanDaoImpl {
 
 	public String saveHandscan(HandScanRecord handscan){
 		sessionFactory.getCurrentSession().saveOrUpdate(handscan);
-		return "SUCESS";
+		return "SUCCESS";
 	}
 	
 	public String saveHandscanHeader(HandScanHeader hs) {

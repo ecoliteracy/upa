@@ -72,9 +72,9 @@ public class HandScanServiceImpl implements HandScanService{
 		
 		//
 		System.out.println("[1]=====HandScanServiceImpl=====");
-		System.out.println(hr.getTz_code());
-		System.out.println(hr.getLast_modified_date());
-		System.out.println(hr.getCreated_date());
+		System.out.println(hr.getTzCode());
+		System.out.println(hr.getLastModifiedDate());
+		System.out.println(hr.getCreatedDate());
 		
 		/*
 		if(h != null && h.getHeaderId() != null){
@@ -95,9 +95,9 @@ public class HandScanServiceImpl implements HandScanService{
 		*/
 		
 		System.out.println("[2]=====HandScanServiceImpl=====");
-		System.out.println(h.getTz_code());
-		System.out.println(h.getLast_modified_date());
-		System.out.println(h.getCreated_date());
+		System.out.println(h.getTzCode());
+		System.out.println(h.getLastModifiedDate());
+		System.out.println(h.getCreatedDate());
 		
 		hr.setParticipationTime(getHourInRecord(hr));
 		if(hr.getParticipationTime()!=null){

@@ -1,5 +1,10 @@
 package com.upa.web.controller;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +20,12 @@ public class OrganizationController {
 
 	
 	private OrganizationService orgSrv;
+	
+	@Autowired(required=true)
+	@Qualifier(value="orgSrv")
+	public void OrganizationService(OrganizationService orgSrv){
+		this.orgSrv = orgSrv;
+	}
 	 
 	@RequestMapping(value="/organizationView")
 	public ModelAndView getData(@SessionAttribute("appuser") AppUser appuser){
@@ -22,10 +33,16 @@ public class OrganizationController {
 		System.out.println("OrganizationController @ getData()");
 		System.out.println();
 		
-		ModelAndView model = new ModelAndView("profiles/organization/organization");//index
+		ModelAndView model = new ModelAndView("profiles/organization/organization");
 		
+		Map<String,String> orgTypeList = new LinkedHashMap<String,String>();
+		orgTypeList.put("CMP", "COMPANY");
+		orgTypeList.put("NGO", "NON PROFIT");
+
 		model.addObject("org", new Organization());
 		model.addObject("appuser", appuser);
+		model.addObject("orgTypeList", orgTypeList);
+
 		return model;
 	}
 	

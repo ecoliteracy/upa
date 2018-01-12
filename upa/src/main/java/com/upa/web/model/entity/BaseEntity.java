@@ -5,31 +5,32 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
-
+@MappedSuperclass
 public class BaseEntity {
-	@Column(name="TZ_CODE")
-	String tz_code;
-	@Column(name="CREATED_DATE")
-	Date created_date;
-	@Column(name="LAST_MODIFIED_DATE")
-	Date last_modified_date;
 	
-	public String getTz_code() {
-		return tz_code;
+	@Column(name="TZ_CODE")
+	private String tzCode;
+	@Column(name="CREATED_DATE")
+	private Date createdDate = new Date();;
+	@Column(name="LAST_MODIFIED_DATE")
+	private Date lastModifiedDate = new Date();;
+	
+	public String getTzCode() {
+		return tzCode;
 	}
-	public void setTz_code(String tz_code) {
-		this.tz_code = tz_code;
+	public void setTzCode(String tz_code) {
+		this.tzCode = tz_code;
 	}
-	public Date getCreated_date() {
-		return created_date;
+	public Date getCreatedDate() {
+		return createdDate;
 	}
-	public void setCreated_date(Date created_date) {
-		this.created_date = created_date;
+	public void setCreatedDate(Date created_date) {
+		this.createdDate = created_date;
 	}
-	public Date getLast_modified_date() {
-		return last_modified_date;
+	public Date getLastModifiedDate() {
+		return lastModifiedDate;
 	}
-	public void setLast_modified_date(Date last_modified_date) {
-		this.last_modified_date = last_modified_date;
+	public void setLastModifiedDate(Date last_modified_date) {
+		this.lastModifiedDate = last_modified_date;
 	}
 }

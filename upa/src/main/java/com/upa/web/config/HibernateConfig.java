@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.upa.web.model.entity.AppUser;
 import com.upa.web.model.entity.HandScanRecord;
+import com.upa.web.model.entity.Organization;
 
 @Configuration
 @EnableTransactionManagement
@@ -67,6 +68,7 @@ public class HibernateConfig {
 		//Test
 		sessionFactory.setAnnotatedClasses(new Class[]{HandScanRecord.class});
 		sessionFactory.setAnnotatedClasses(new Class[]{AppUser.class});
+		sessionFactory.setAnnotatedClasses(new Class[]{Organization.class});
 		
 		sessionFactory.setHibernateProperties(getHibernateProperties());
 		return sessionFactory;

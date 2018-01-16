@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"    pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Organization Profile Page</title>
+<title>Confirmation of Added Organization</title>
 
 <link rel="stylesheet"	href="https://kendo.cdn.telerik.com/2017.1.223/styles/kendo.common-material.min.css" />
 <link rel="stylesheet"	href="https://kendo.cdn.telerik.com/2017.1.223/styles/kendo.material.min.css" />
@@ -18,38 +18,17 @@
 
 </head>
 <body>
- 	<form:form method="post" modelAttribute="org" action="submitNewOrg">
-		<div id="submitNewOrg"> 
+	<form:form>
+ 		<div>
+			<center><h2>Registration Successful</h2></center>
 			<table>
 				<tr>
-					<h4>Organization Profile</h4>
+					<td>Company Name : </td>
+					<td>${org.orgName}</td>
+					<td></td>
 				</tr>
 				<tr>
-					<td>
-						Company Name :
-					</td>
-					<td>
-						<form:input id="orgName" path="orgName" 
-						size="50" maxlength="50" 
-						class="uppercase" />
-					</td>
-		     	</tr>
-		     	<tr>
-		     		<td>
-						<form:select path = "orgType">
-							<form:options items="${orgTypeList}" />
-						</form:select>
-		     		</td>
-		     	</tr>
-		     	<tr>
-			     	<td>
-						<input id="primaryTextButton" type="submit" 
-						name="submitNewOrg" value="SUBMIT">
-					</td>
-					<td>
-						<button id="primaryTextButton" type="submit" 
-						name="submitNewOrg" value="SUBMIT">SUBMIT</button>
-					</td>
+					<td><a href="returnMenu">Return to the menu</a></td>
 				</tr>
 			</table>
 		</div>

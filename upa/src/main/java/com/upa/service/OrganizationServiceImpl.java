@@ -34,4 +34,9 @@ public class OrganizationServiceImpl implements OrganizationService{
 	}
 	
 	
+	public Organization getOrganizationByOrgName(String orgName){
+		Organization org = organizationDaoImpl.getOrganization(orgName);
+		return org;
+	}
+	
 }

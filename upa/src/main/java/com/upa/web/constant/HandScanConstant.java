@@ -1,6 +1,6 @@
 package com.upa.web.constant;
 
-public class HandScanConstant {
+public class HandScanConstant extends BaseConstants{
 	
 	public final String FIRST_DATE = "2017/02/12";
 	public final int TERM = 13; //biweek - every 14 days, it reset.

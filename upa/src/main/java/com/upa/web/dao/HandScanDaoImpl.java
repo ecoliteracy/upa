@@ -17,6 +17,7 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.upa.web.constant.HandScanConstant;
 import com.upa.web.model.entity.HandScanHeader;
 import com.upa.web.model.entity.HandScanRecord;
 
@@ -34,12 +35,12 @@ public class HandScanDaoImpl {
 
 	public String saveHandscan(HandScanRecord handscan){
 		sessionFactory.getCurrentSession().saveOrUpdate(handscan);
-		return "SUCCESS";
+		return HandScanConstant.SUCCESS;
 	}
 	
 	public String saveHandscanHeader(HandScanHeader hs) {
 		sessionFactory.getCurrentSession().saveOrUpdate(hs);
-		return "SUCCESS";
+		return HandScanConstant.SUCCESS;
 	}
 	
 	public String getCurrentDate() {

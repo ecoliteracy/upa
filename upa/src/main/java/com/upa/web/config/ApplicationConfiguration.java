@@ -14,6 +14,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
+import com.upa.service.AlertMessageService;
+import com.upa.service.AlertMessageServiceImpl;
 import com.upa.service.EmployeeManager;
 import com.upa.service.HandScanService;
 import com.upa.service.HandScanServiceImpl;
@@ -69,6 +71,13 @@ public class ApplicationConfiguration extends WebMvcConfigurerAdapter {
 		OrganizationServiceImpl organizationServiceImpl = new OrganizationServiceImpl();
 		return organizationServiceImpl;
 	}
+	
+	@Bean(name="alertMsgSrv")
+	public AlertMessageService alertMessageService(){
+		AlertMessageServiceImpl alertMessageServiceImpl = new AlertMessageServiceImpl();
+		return alertMessageServiceImpl;
+	}
+	
 	
 	@Bean(name="handScanService")
 	public HandScanService handScanService(){

@@ -14,14 +14,17 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.upa.service.OrganizationService;
 import com.upa.web.constant.OrganizationConstant;
+import com.upa.web.model.entity.AlertMessage;
 import com.upa.web.model.entity.AppUser;
 import com.upa.web.model.entity.Organization;
 
 @Controller
-public class OrganizationController {
+public class OrganizationController extends BaseController{
 
 	
 	private OrganizationService orgSrv;
+	
+	ModelAndView model = new ModelAndView();
 	
 	@Autowired(required=true)
 	@Qualifier(value="orgSrv")
@@ -31,11 +34,9 @@ public class OrganizationController {
 	 
 	@RequestMapping(value="/organizationView")
 	public ModelAndView getData(@SessionAttribute("appuser") AppUser appuser){
-		
 		System.out.println("OrganizationController @ getData()");
-		System.out.println();
 		
-		ModelAndView model = new ModelAndView("profiles/organization/organization");
+		model = new ModelAndView("profiles/organization/organization");
 		
 		Map<String,String> orgTypeList = new LinkedHashMap<String,String>();
 		orgTypeList.put("CMP", "COMPANY");
@@ -50,7 +51,6 @@ public class OrganizationController {
 	
 	@RequestMapping("/submitNewOrg")
 	public ModelAndView submit(@SessionAttribute("appuser") AppUser appuser, @ModelAttribute Organization org){
-		ModelAndView model = new ModelAndView();
 		
 		System.out.println("OrganizationController @ submit()");
 		System.out.println(org.getOrgName());
@@ -61,8 +61,9 @@ public class OrganizationController {
 			model.addObject("org", orgSrv.getOrganizationByOrgName(org.getOrgName()));
 			return model;
 		}else{
-			model.addObject("result", "ERROR-");
-			return null;
+			model.addObject("org", new Organization());
+			model.addObject("result", getAlertMessage(result,"EN"));
+			return model;
 		}
 	}
 	

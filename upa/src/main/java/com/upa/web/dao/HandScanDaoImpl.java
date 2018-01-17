@@ -70,7 +70,7 @@ public class HandScanDaoImpl {
 	         e.printStackTrace();
 	         return null;
 	      }finally {
-	         session.close(); 
+	         session.close();
 	      }
 	}
 	

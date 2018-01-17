@@ -7,6 +7,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.upa.web.constant.OrganizationConstant;
 import com.upa.web.dao.OrganizationDaoImpl;
 import com.upa.web.model.entity.Organization;
 
@@ -29,8 +30,14 @@ public class OrganizationServiceImpl implements OrganizationService{
 		org.setTzCode("CDT");
 		org.setCreatedDate(new Date());
 		
+		//Validation - 1. Duplication Check
+		if(organizationDaoImpl.getOrganization(org.getOrgName()) != null){
+			System.out.println("OrganizationServiceImpl.addNewOrg() - DUPLICATED");
+			return OrganizationConstant.DUPLICATED;
+		}
+		
 		String result = organizationDaoImpl.saveOraganization(org);
-		return result;	
+		return result;
 	}
 	
 	

@@ -1,5 +1,6 @@
 package com.upa.web.dao;
 
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import org.hibernate.HibernateException;
@@ -61,6 +62,8 @@ public class OrganizationDaoImpl {
  		}catch(HibernateException he){
 			he.printStackTrace();
 			return null;
-		}				
+		}catch(NoResultException nr){
+			return null;
+		}
 	}	
 }

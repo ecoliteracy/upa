@@ -2,6 +2,10 @@
 	border: 1px solid rgba(0,0,0,0.3);
 }
 
+.uppercase {
+	text-transform:uppercase
+}
+
 .outer {
 	width: 960px;
 	color: navy;

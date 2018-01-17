@@ -24,14 +24,16 @@
 				<tr>
 					<h4>Organization Profile</h4>
 				</tr>
+				<tr>${result}</tr>
 				<tr>
 					<td>
 						Company Name :
 					</td>
 					<td>
 						<form:input id="orgName" path="orgName" 
-						size="50" maxlength="50" 
-						class="uppercase" />
+						size="50" maxlength="50"
+						class="uppercase"
+						onkeyup="this.value=this.value.toUpperCase()"/>
 					</td>
 		     	</tr>
 		     	<tr>

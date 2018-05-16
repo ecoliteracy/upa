@@ -78,10 +78,6 @@ public class LoginController {
 		System.out.println("LoginController.loginProcess");
 		ModelAndView mv = null;
 		
-		/*Shortcut for development*/
-		appuser.setLoginId("KIWASAKI");
-		appuser.setUserPassword("welcome1");
-		
 		UserValidationResult rs = this.userservice.isValidUserPassword(appuser);
 		String rtnrst = rs.getValidationResult();
 				

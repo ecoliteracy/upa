@@ -14,7 +14,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.upa.service.OrganizationService;
 import com.upa.web.constant.OrganizationConstant;
-import com.upa.web.model.entity.AlertMessage;
 import com.upa.web.model.entity.AppUser;
 import com.upa.web.model.entity.Organization;
 

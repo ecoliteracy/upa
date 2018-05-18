@@ -18,8 +18,13 @@
 <script type="text/javascript" src="resources/js/app.js"></script>
 
 </head>
-<h1>CSS TEXT is populated</h1>
+<h2>${appuser.loginId}</h2>
 <h2>You are now at mytest.jsp</h2>
+<p> Cleck to go to Calender Project <a href="calendar">Calendar Test</a><br><br> </p>
+
+
+
+
 
 <h3>
 	<a href="third">Click Here</a>

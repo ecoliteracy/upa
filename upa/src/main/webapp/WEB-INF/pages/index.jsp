@@ -21,14 +21,8 @@
 		onclick="getCurrentDateString()" />
 			 -->
 
-	<h2>${appuser.loginId}</h2>
-
-	<h2>Current Date Time: ${currentDateTime}</h2>
-	<c:set var="test" scope="request" value="${requestScope.userDetails}"></c:set>
-
 	<h3>
-		<a href="handscan">Hand Scan Menu</a><br><br> 
-		<a href="calendar">Calendar Test</a><br><br>
+		<a href="timeclock">Hand Scan Menu</a><br><br> 
 		<a href="mytest">My Sandbox - all samples are here</a><br><br>
 		<a href="showEmployeeForm">Add Employee</a><br><br>
 		<a href="organizationView">Add Company</a><br><br>

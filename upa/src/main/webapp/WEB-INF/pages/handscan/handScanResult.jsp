@@ -12,7 +12,7 @@
 	<br>
 	<a href="index">Index Menu</a>
 	<br>
-	<a href="handscan">Hand Scan Menu</a>
+	<a href="timeclock">Hand Scan Menu</a>
 	</h2>
 </body>
 </html>

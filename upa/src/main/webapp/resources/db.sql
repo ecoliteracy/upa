@@ -48,6 +48,8 @@ insert into upa.app_user (USER_ID,  LOGIN_ID,  USER_PASSWORD,  USER_LAST_LOGIN_D
 values(1,'KIWASAKI', 'welcome1',  sysdate(), null, 'US3', sysdate(),  sysdate());
 commit;
 
+select * from upa.app_user;
+
 DROP TABLE IF EXISTS upa.upa_user_salary_type;
 CREATE TABLE upa.upa_user_salary_type (
   USER_ID INT(10) UNSIGNED NOT NULL UNIQUE,

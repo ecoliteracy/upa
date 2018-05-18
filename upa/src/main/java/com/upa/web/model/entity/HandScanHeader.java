@@ -42,17 +42,17 @@ public class HandScanHeader extends BaseEntity{
 	Date lastDate;
 	
 	@Column(name="TOTAL_HOUR")
-	long totalHour;
+	Long totalHour;
 	
 	@Column(name="REMAINING_HOUR")
-	long remainingHour;
+	Long remainingHour;
 	
 	@OneToMany(cascade=CascadeType.ALL,fetch = FetchType.EAGER, mappedBy = "handScanHeader")
 	List<HandScanRecord> handscanrecords;
 
 	public HandScanHeader(){};
 
-	public HandScanHeader(Long id, Date firstDate, Date lastDate, String termType, long totalHour, long remainingHour, List<HandScanRecord> handscanrecords){
+	public HandScanHeader(Long id, Date firstDate, Date lastDate, String termType,  Long totalHour, Long remainingHour, List<HandScanRecord> handscanrecords){
 		this.headerId=id;
 		this.termType = termType;
 		this.firstDate = firstDate;
@@ -98,7 +98,7 @@ public class HandScanHeader extends BaseEntity{
 		return totalHour;
 	}
 
-	public void setTotalHour(long totalHour) {
+	public void setTotalHour(Long totalHour) {
 		this.totalHour = totalHour;
 	}
 
@@ -106,7 +106,7 @@ public class HandScanHeader extends BaseEntity{
 		return remainingHour;
 	}
 
-	public void setRemainingHour(long remainingHour) {
+	public void setRemainingHour(Long remainingHour) {
 		this.remainingHour = remainingHour;
 	}
 

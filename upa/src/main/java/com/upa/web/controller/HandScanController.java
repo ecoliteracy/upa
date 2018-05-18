@@ -1,9 +1,12 @@
 package com.upa.web.controller;
 
+import java.sql.Time;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.hibernate.type.descriptor.java.TimeZoneTypeDescriptor.TimeZoneComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.upa.service.HandScanService;
 import com.upa.web.config.ApplicationProperties;
 import com.upa.web.constant.HandScanConstant;
-import com.upa.web.model.HandScan;
+import com.upa.web.model.TimeClocker;
 import com.upa.web.model.entity.AppUser;
 import com.upa.web.model.entity.HandScanHeader;
 import com.upa.web.model.entity.HandScanRecord;
@@ -36,7 +39,6 @@ public class HandScanController {
 	
 	private HandScanHeader handscanheader = new HandScanHeader();
 	private HandScanRecord handscanrecord = new HandScanRecord();
-	//private HandScan handscan = new HandScan();
 	
 	private AppUser appuserContext;
 
@@ -48,12 +50,12 @@ public class HandScanController {
 		this.handscanservice = ps;
 	}
 	
-	@RequestMapping(value="/handscan")
+	@RequestMapping(value="/timeclock")
 	public ModelAndView getData(@SessionAttribute("appuser") AppUser appuser){
-		//forwards to handscan.jsp
-		ModelAndView model  = new ModelAndView("handscan/handscan");
+		//forwards to timeclock.jsp at WEB-INF/pages/handscan/timeclock.jsp
+		ModelAndView model  = new ModelAndView("handscan/timeclock"); 
 		
-		HandScan hs = new HandScan();
+		TimeClocker hs = new TimeClocker();
 		
 		String userId = appuser.getLoginId();
 		
@@ -62,8 +64,6 @@ public class HandScanController {
 		if(hsh != null && hsh.getHeaderId() != null){
 			System.out.println("header ID: "+ hsh.getHeaderId());
 			setHandscanheader(hsh);
-		}else{
-			System.out.println("header ID: NULL - new HandScanHeader()");
 		}
 		
 		/*Clockin and out information*/
@@ -75,7 +75,7 @@ public class HandScanController {
 		
 		
 		//setHandscanheaderList(this.handscanservice.getHandScanList());
-		model.addObject("handscan", new HandScan());
+		model.addObject("timeclocker", new TimeClocker());
 		model.addObject("handScanRecord", new HandScanRecord());		
 		
 		return model;
@@ -84,34 +84,25 @@ public class HandScanController {
 
 	
 	@RequestMapping("/submit")
-	public ModelAndView submit(@SessionAttribute("appuser") AppUser appuser, @ModelAttribute HandScan hs){
-		
+	public ModelAndView submit(@SessionAttribute("appuser") AppUser appuser, @ModelAttribute TimeClocker hs){
 		String status = null;
-		
 		System.out.println("HandScanController @ submit()");
 		System.out.println(getHandscanheader().getHeaderId());
-		System.out.println(hs.getFirstDate());
-		System.out.println(hs.getLastDate());
+		System.out.println(hs.getScanDateStr());
+		System.out.println(hs.getScanTimeStr());
 		
-		System.out.println();
-		
-		
-		if(getHandscanheader() != null && getHandscanheader().getHeaderId() != null){
-			//setHandscanrecord(this.handscanservice.getMatchingHandScanRecord(getHandscanheader(), hs.getScanDateStr()));
-		}
+	
 		
 		if(getHandscanrecord() != null && getHandscanrecord().getRecordId() != null) {
-			System.out.println("[1]======== FOUND RECORD ======= ");
-			System.out.println("getHandscanrecord().getRecordId() :  "+ getHandscanrecord().getRecordId());
-
+			HandScanHeader handscanheader = new HandScanHeader();
+			HandScanRecord handscanrecord = new HandScanRecord();
+			setHandscanrecord(setHandScanRecordFromUI(hs, handscanrecord));
 			status = this.handscanservice.addHandScanRecordUpdateHeader(getHandscanrecord(), getHandscanheader());
 		}else{
-			System.out.println("[2]======== NOT FOUND RECORD ======= ");
-			
 			status = this.handscanservice.addHandScan(getHandscanrecord(), getHandscanheader());
 		}
 		
-		ModelAndView mv = new ModelAndView("handscan/handScanResult");
+		ModelAndView mv = new ModelAndView("timeclock/handScanResult");
 				
 		if(status==null){
 			mv.addObject("handScansList", this.handscanservice.getHandScanList());
@@ -121,6 +112,29 @@ public class HandScanController {
 			mv.addObject("msg", status);
 			return mv;
 		}
+	}
+	
+	
+	private HandScanHeader setHandScanHeaderFromUI(TimeClocker tc, HandScanHeader hs){
+		//tc.
+		return null;
+	}
+	
+	private HandScanRecord setHandScanRecordFromUI(TimeClocker tc, HandScanRecord handscanrecord){
+		SimpleDateFormat formatterD = new SimpleDateFormat("MM/dd/yyyy");
+		SimpleDateFormat formatterT = new SimpleDateFormat("hh:mm a");
+		try {
+			handscanrecord.setScanDate(formatterD.parse(tc.getScanDateStr()));
+			if(tc.getClockInOut().equals("I")){
+				handscanrecord.setScanInTime(formatterT.parse(tc.getScanTimeStr()));
+			}else{
+				handscanrecord.setScanOutTime(formatterT.parse(tc.getScanTimeStr()));
+			}
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return handscanrecord; 
 	}
 	
 	

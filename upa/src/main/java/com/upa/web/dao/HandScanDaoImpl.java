@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.persistence.Entity;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.TemporalType;
@@ -79,33 +80,47 @@ public class HandScanDaoImpl {
 		//List<HandScanHeader> hsList = (List<HandScanHeader>) sessionFactory.getCurrentSession().createCriteria(HandScanHeader.class);
 		Session session = sessionFactory.openSession();
 		Transaction tx = null;
+		System.out.println("2018-05-18-02");
 		try{
 			tx = session.beginTransaction();
 			// Create HQL Between clause
 			//String HQL_QUERY = "FROM HandScanHeader where firstDate <= :date";// and lastDate >= :date ";
-			String HQL_QUERY = "FROM HandScanHeader where firstDate <= :date and lastDate >= :date and appuser.userId = :userId";//
+			String HQL_QUERY = "FROM HandScanHeader where firstDate <= :date and lastDate >= :date and appuser.userId = :userId";
 
 			Query query = session.createQuery(HQL_QUERY);
-
+			
 			query.setParameter("date", date, TemporalType.DATE);
 			query.setParameter("userId", userId);
-
-			HandScanHeader hs = (HandScanHeader) query.getSingleResult();
-			if(hs != null){
-				hs.getHandscanrecords();
-			}
+			
+			//HandScanHeader hs = (HandScanHeader) query.getSingleResult();
+			
+			
+			HandScanHeader hs = new HandScanHeader();
+			hs = (HandScanHeader) query.getSingleResult();
+			
+//			if(obj!=null){
+//				hs = (HandScanHeader)obj; 
+//			}
+//			if(hs != null){
+//				hs.getHandscanrecords();
+//			}
 
 			tx.commit();
 			return hs;
 		}catch (HibernateException e) {
 			if (tx!=null) tx.rollback();
 			e.printStackTrace();
+			session.close(); 
 			return null;
 		}catch(NoResultException e){
-			//e.printStackTrace();
-			return null;
-		}finally {
+			e.printStackTrace();
 			session.close(); 
+			return null;
+		}catch(Exception e){
+			//todo: java.lang.String cannot be cast to java.lang.Long when NoResult
+			e.printStackTrace();
+			session.close();
+			return null;
 		}
 	}
 
@@ -176,12 +191,11 @@ public class HandScanDaoImpl {
 		}catch (HibernateException e) {
 			if (tx!=null) tx.rollback();
 			e.printStackTrace();
+			session.close(); 
 			return null;
 		}catch(NoResultException e){
-			//e.printStackTrace();
-			return null;
-		}finally {
 			session.close(); 
+			return null;
 		}
 	}
 

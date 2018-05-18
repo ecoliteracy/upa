@@ -2,7 +2,7 @@ package com.upa.web.model;
 
 import java.util.Date;
 
-public class HandScan {
+public class TimeClocker {
 
 	Long headerId;
 	Date firstDate;
@@ -12,9 +12,9 @@ public class HandScan {
 	String scanDateStr;
 	String scanTimeStr;
 	
-	public HandScan(){};
+	public TimeClocker(){};
 	
-	public HandScan(Long headerId, Date firstDate, Date lastDate, String clockInOut, String scanDateStr, String scanTimeStr){
+	public TimeClocker(Long headerId, Date firstDate, Date lastDate, String clockInOut, String scanDateStr, String scanTimeStr){
 		this.headerId = headerId;
 		this.firstDate = firstDate;
 		this.lastDate = lastDate;

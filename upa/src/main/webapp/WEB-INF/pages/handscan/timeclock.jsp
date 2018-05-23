@@ -18,18 +18,8 @@
 <script type="text/javascript" src="resources/js/app.js"></script>
 </head>
 <body>
-	<div>
-		<p>Time Clocker Application</p>
-		First Date:
-		<form:input id="firstdatepicker" 
-			path="timeclocker.firstDate"></form:input><br /> 
-		Last Date :
-		<form:input id="lastdatepicker"
-			path="timeclocker.lastDate"></form:input>
-		<br/>
-
-	</div>
 	<form:form method="POST" modelAttribute="timeclocker" action="submit">
+	<p>Time Clocker for ${appuser.userId} from ${timeclocker.firstDate} to ${timeclocker.lastDate}</p>
 	<div id="timeclockerApp">
 		<div
 			style="border-width: 1px; border-style: solid; border-color: rgb(125, 125, 125); width: 250px;">

@@ -4,6 +4,7 @@ import java.sql.Time;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.hibernate.type.descriptor.java.TimeZoneTypeDescriptor.TimeZoneComparator;
@@ -95,12 +96,10 @@ public class HandScanController {
 			
 			/*Clockin and out information*/
 			DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-			//setCurrentDateStr(dateFormat.format(getCurrentTime()));
 			model.addObject("getCurrentDate",dateFormat.format(getCurrentTime()));
 			DateFormat timeFormat = new SimpleDateFormat("hh:mm a");
 			model.addObject("getCurrentTime", timeFormat.format(getCurrentTime()));
 						
-			//setHandscanheaderList(this.handscanservice.getHandScanList());
 			model.addObject("timeclocker", new TimeClocker());
 			model.addObject("handScanRecord", new HandScanRecord());		
 			
@@ -108,13 +107,70 @@ public class HandScanController {
 		}
 	}
 	
-	@RequestMapping("/payPeriodSubmit")
-	public ModelAndView payPeriodSubmit(@SessionAttribute("appuser") AppUser appuser, @ModelAttribute UserSalaryType userSalaryType){
-		logger.trace("HandScanController-payPeriodSubmit");
+	private Date addTimePortion(Date date){
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		c.add(Calendar.DATE, 1);
+		c.add(Calendar.SECOND, -1);
+		date=c.getTime();
+		return date;
+	}
+	
+    private HandScanHeader adjustDateRange(HandScanHeader handscanheader, Date currentDate, String payPeriodType){
+     	if(handscanheader.getFirstDate().before(currentDate) && handscanheader.getLastDate().after(currentDate)){
+    		return handscanheader;
+    	}else{
+    		Date firstDay = handscanheader.getFirstDate();
+    		Date lastDay = handscanheader.getLastDate();
+    		firstDay = incrementDate(firstDay, payPeriodType);
+    		lastDay = incrementDate(lastDay, payPeriodType);
+    		
+    		handscanheader.setFirstDate(firstDay);
+    		handscanheader.setLastDate(lastDay);
+    		
+    		return adjustDateRange(handscanheader, currentDate, payPeriodType);
+    	}
+    }
+    
+    private Date incrementDate(Date date, String payPeriodType){
+  		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		
+		switch(payPeriodType){
+			case "1":
+				c.add(Calendar.MONTH, 1);
+			break;
+			
+			case "2":
+	    		c.add(Calendar.DATE, 15);
+			break;
+			
+			case "3":
+	    		c.add(Calendar.DATE, 14);
+			break;
+			
+			case "4":
+	    		c.add(Calendar.DATE, 7);
+			break;
+			
+			case "5":
+	    		c.add(Calendar.DATE, 1);
+			break;
+		}
+		
+		return c.getTime();
+		
+    }
+	
+	@RequestMapping("/submitUserPayPeriod")
+	public ModelAndView submitUserPayPeriod(@SessionAttribute("appuser") AppUser appuser, @ModelAttribute UserSalaryType userSalaryType){
+		logger.trace("HandScanController-submitUserPayPeriod");
 		userSalaryType.setAppUser(appuser);
 		userSalaryType.setTzCode("CDS");
-		//userSalaryType.setUserSeq(appuser.getUserSeq());
-		if(userservice.addUserSalaryType(userSalaryType).equals("SUCCESS")){
+		userSalaryType.setLastDate(addTimePortion(userSalaryType.getLastDate()));		
+		//Insert the record to the dabase
+		String status = userservice.addUserSalaryType(userSalaryType);
+		if(status.equals("SUCCESS")){
 			ModelAndView model  = new ModelAndView("handscan/timeclock"); 
 			
 			String userId = appuser.getUserId();
@@ -124,6 +180,11 @@ public class HandScanController {
 			if(hsh != null && hsh.getHeaderSeq() != null){
 				System.out.println("header ID: "+ hsh.getHeaderSeq());
 				setHandscanheader(hsh);
+			}else{
+				hsh = new HandScanHeader();
+				hsh.setFirstDate(userSalaryType.getFirstDate());
+				hsh.setLastDate(userSalaryType.getLastDate());
+				hsh = adjustDateRange(hsh,getCurrentTime(),userSalaryType.getPayPeriodType());
 			}
 			
 			/*Clockin and out information*/
@@ -134,7 +195,12 @@ public class HandScanController {
 			model.addObject("getCurrentTime", timeFormat.format(getCurrentTime()));
 						
 			//setHandscanheaderList(this.handscanservice.getHandScanList());
-			model.addObject("timeclocker", new TimeClocker());
+			TimeClocker timeClocker = new TimeClocker();
+			
+			timeClocker.setFirstDate(hsh.getFirstDate());
+			timeClocker.setLastDate(hsh.getLastDate());
+			
+			model.addObject("timeclocker", timeClocker);
 			model.addObject("handScanRecord", new HandScanRecord());		
 			
 			return model;

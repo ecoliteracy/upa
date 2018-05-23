@@ -17,7 +17,7 @@ import javax.persistence.Table;
 public class Organization extends BaseEntity{
 
 	@Id
-	@Column(name="ORG_ID", unique = true, nullable = false)
+	@Column(name="ORG_SEQ", unique = true, nullable = false)
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	Integer orgSeq;
 	

@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class TimeClocker {
 
-	Long headerId;
+	Long headerSeq;
 	Date firstDate;
 	Date lastDate;
 	String clockInOut;
@@ -15,7 +15,7 @@ public class TimeClocker {
 	public TimeClocker(){};
 	
 	public TimeClocker(Long headerId, Date firstDate, Date lastDate, String clockInOut, String scanDateStr, String scanTimeStr){
-		this.headerId = headerId;
+		this.headerSeq = headerId;
 		this.firstDate = firstDate;
 		this.lastDate = lastDate;
 		this.clockInOut = clockInOut;
@@ -23,11 +23,11 @@ public class TimeClocker {
 		this.scanTimeStr = scanTimeStr;
 	}
 	
-	public Long getHeaderId() {
-		return headerId;
+	public Long getHeaderSeq() {
+		return headerSeq;
 	}
-	public void setHeaderId(Long headerId) {
-		this.headerId = headerId;
+	public void setHeaderSeq(Long headerId) {
+		this.headerSeq = headerId;
 	}
 	public Date getFirstDate() {
 		return firstDate;

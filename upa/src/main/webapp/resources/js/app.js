@@ -5,16 +5,22 @@ function addDateToLastDate(){
 	var date = new Date(datepicker1);
 
 	if(billingperiodselect == 1){
-		date = dateformat(date,0,1,0);
+		//once a month
+		date = dateformat(date,0,1,-1);
 	}else if(billingperiodselect == 2){
+		//twice a month
 		date = dateformat(date,0,0,14);
 	}else if(billingperiodselect == 3){
+		//bi-weekly
 		date = dateformat(date,0,0,13);
 	}else if(billingperiodselect == 4){
+		//weekly
 		date = dateformat(date,0,0,6);
 	}else if(billingperiodselect == 5){
+		//daiily
 		date = dateformat(date,0,0,1);
 	}
+	date = dateformat(second,0,0,-1);
 	document.getElementById("lastdatepicker").value = date;
 }
 

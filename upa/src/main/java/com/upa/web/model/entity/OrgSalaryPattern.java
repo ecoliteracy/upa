@@ -38,20 +38,16 @@ public class OrgSalaryPattern extends BaseEntity{
 	@Column(name="LAST_DATE")
 	Date lastDate;
 	
-	@Column(name="FREQUENCY_TYPE")
-	String frequencyType;
-	
 	@OneToMany(cascade=CascadeType.PERSIST, fetch=FetchType.EAGER, mappedBy="orgSalaryPattern")
 	List<AppUser> appUser;
 	
 	public OrgSalaryPattern(){};
 	
-	public OrgSalaryPattern(Long orgspSeq, Organization organization, Date firstDate, Date lastDate, String frequencyType){
+	public OrgSalaryPattern(Long orgspSeq, Organization organization, Date firstDate, Date lastDate){
 		this.orgspSeq = orgspSeq;
 		this.organization = organization;
 		this.firstDate = firstDate;
 		this.lastDate = lastDate;
-		this.frequencyType = frequencyType;
 	}
 
 	public Long getOrgspSeq() {
@@ -86,11 +82,4 @@ public class OrgSalaryPattern extends BaseEntity{
 		this.lastDate = lastDate;
 	}
 
-	public String getFrequencyType() {
-		return frequencyType;
-	}
-
-	public void setFrequencyType(String frequencyType) {
-		this.frequencyType = frequencyType;
-	}
 }

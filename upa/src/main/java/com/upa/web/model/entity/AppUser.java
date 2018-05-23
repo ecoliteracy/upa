@@ -20,11 +20,11 @@ import javax.persistence.Table;
 public class AppUser extends BaseEntity{
 
 	@Id
-	@Column(name="USER_ID", unique = true, nullable = false)
+	@Column(name="USER_SEQ", unique = true, nullable = false)
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	Long userId;
-	@Column(name="LOGIN_ID")
-	String loginId;
+	Integer userSeq;
+	@Column(name="USER_ID")
+	String userId;
 	@Column(name="USER_PASSWORD")
 	String userPassword;
 	@Column(name="USER_LAST_LOGIN_DATE")
@@ -38,27 +38,27 @@ public class AppUser extends BaseEntity{
 	
 	public AppUser(){};
 	
-	public AppUser(Long userId, String loginId, String userPassword, Date userLastLoginDate){
+	public AppUser(Integer userSeq, String userId, String userPassword, Date userLastLoginDate){
+		this.userSeq = userSeq;
 		this.userId = userId;
-		this.loginId = loginId;
 		this.userPassword = userPassword;
 		this.userLastLoginDate = userLastLoginDate;
 	}
 
-	public Long getUserId() {
+	public Integer getUserSeq() {
+		return userSeq;
+	}
+
+	public void setUserSeq(Integer userSeq) {
+		this.userSeq = userSeq;
+	}
+
+	public String getUserId() {
 		return userId;
 	}
 
-	public void setUserId(Long userId) {
+	public void setUserId(String userId) {
 		this.userId = userId;
-	}
-
-	public String getLoginId() {
-		return loginId;
-	}
-
-	public void setLoginId(String loginId) {
-		this.loginId = loginId;
 	}
 
 	public String getUserPassword() {

@@ -7,18 +7,24 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.upa.web.model.UserValidationResult;
 import com.upa.web.model.entity.AppUser;
+import com.upa.web.model.entity.UserSalaryType;
 
 @Repository
 public class UserDao {
 	
+	private Logger logger = LoggerFactory.getLogger(getClass());
+	
 	@Autowired
 	private SessionFactory sessionFactory;
 	
+	public UserDao(){}
 	
 	public UserValidationResult isValidUserPassword(AppUser l){
 
@@ -29,9 +35,9 @@ public class UserDao {
 
 		try{
 			tx = session.beginTransaction();
-			String HQL_QUERY = "From AppUser where loginId = :loginId ";
+			String HQL_QUERY = "From AppUser where userId = :userId ";
 			Query query = session.createQuery(HQL_QUERY, AppUser.class);
-			query.setParameter("loginId", l.getLoginId());
+			query.setParameter("userId", l.getUserId());
 
 			AppUser au = (AppUser) query.getSingleResult();
 			
@@ -63,4 +69,67 @@ public class UserDao {
 			session.close(); 
 		}
 	}
+	
+	
+	public UserSalaryType getUserSalaryType(Integer userSeq){
+		UserSalaryType userSalaryType = new UserSalaryType();
+		
+		Session session = sessionFactory.openSession();
+		Transaction tx = null;
+
+		try{
+			tx = session.beginTransaction();
+			String HQL_QUERY = "From UserSalaryType where userSeq = :userSeq ";
+			Query query = session.createQuery(HQL_QUERY, UserSalaryType.class);
+			query.setParameter("userSeq", userSeq);
+
+			userSalaryType = (UserSalaryType) query.getSingleResult();
+			 						
+		}catch (HibernateException e) {
+			if (tx!=null) tx.rollback();
+			e.printStackTrace();
+			return null;
+		}catch(NoResultException e){
+			e.printStackTrace();
+			return null;
+		}catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
+		finally {
+			session.close(); 
+		}
+		
+		return userSalaryType;
+	}
+	
+	public String addUserSalaryType(UserSalaryType userSalaryType){
+		logger.trace("UserDao - addUserSalaryType");
+		Session session = sessionFactory.openSession();
+		//Transaction transaction = null;
+		try{
+		    //transaction = session.getTransaction();
+		    //transaction.begin();
+			
+		    session.beginTransaction();
+		    Integer i = (Integer) session.getSession().save(userSalaryType);
+		    logger.trace("Generated Identifier:"+ i);
+			session.getTransaction().commit();
+
+			//sessionFactory.getCurrentSession().saveOrUpdate(userSalaryType);
+			//transaction.commit();
+		}catch (Exception e){
+//		    if (transaction != null) {
+//		        transaction.rollback();
+//		      }
+			session.getTransaction().rollback();
+			e.printStackTrace();
+		}finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+		return "SUCCESS";
+	}
+	
 }

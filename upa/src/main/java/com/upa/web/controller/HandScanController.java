@@ -18,17 +18,19 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.upa.service.HandScanService;
+import com.upa.service.UserService;
+import com.upa.service.logger.ILoggerService;
+import com.upa.service.logger.LoggerServiceImpl;
 import com.upa.web.config.ApplicationProperties;
 import com.upa.web.constant.HandScanConstant;
 import com.upa.web.model.TimeClocker;
 import com.upa.web.model.entity.AppUser;
 import com.upa.web.model.entity.HandScanHeader;
 import com.upa.web.model.entity.HandScanRecord;
+import com.upa.web.model.entity.UserSalaryType;
 
 @Controller
 public class HandScanController {
-	
-	private HandScanService handscanservice;
 	
 	@Autowired
 	private ApplicationProperties applicationProperties;
@@ -44,41 +46,101 @@ public class HandScanController {
 
 	private String currentDateStr;
 	
+	private HandScanService handscanservice;
 	@Autowired(required=true)
 	@Qualifier(value="handScanService")
 	public void HandScanService(HandScanService ps){
 		this.handscanservice = ps;
 	}
+
+	private UserService userservice;
+	@Autowired(required=true)
+	@Qualifier(value="userservice")
+	public void UserService(UserService us){
+		this.userservice = us;
+	}
+	
 	
 	@RequestMapping(value="/timeclock")
 	public ModelAndView getData(@SessionAttribute("appuser") AppUser appuser){
 		//forwards to timeclock.jsp at WEB-INF/pages/handscan/timeclock.jsp
-		ModelAndView model  = new ModelAndView("handscan/timeclock"); 
+		logger.trace("HandScanController.getData");
+		ModelAndView model  = new ModelAndView(); 
 		
 		TimeClocker hs = new TimeClocker();
 		
-		String userId = appuser.getLoginId();
+		Integer userSeq = appuser.getUserSeq();
 		
-		HandScanHeader hsh = this.handscanservice.getHandScanOfTerm(getCurrentTime(), userId);
+		//User's profile
+		UserSalaryType userSalaryType = this.userservice.getUserSalaryType(userSeq);
 		
-		if(hsh != null && hsh.getHeaderId() != null){
-			System.out.println("header ID: "+ hsh.getHeaderId());
-			setHandscanheader(hsh);
+		if(userSalaryType == null){
+			model  = new ModelAndView("profiles/appuser/salarytype");
+			userSalaryType = new UserSalaryType();
+			//userSalaryType.setAppUser(appuser);
+			model.addObject("userSalaryType", userSalaryType);
+			model.addObject("appuser", appuser);
+			return model;
+		}else{
+			model  = new ModelAndView("handscan/timeclock"); 
+			
+			String userId = appuser.getUserId();
+	
+			HandScanHeader hsh = this.handscanservice.getHandScanOfTerm(getCurrentTime(), userId);
+			
+			if(hsh != null && hsh.getHeaderSeq() != null){
+				System.out.println("header ID: "+ hsh.getHeaderSeq());
+				setHandscanheader(hsh);
+			}
+			
+			/*Clockin and out information*/
+			DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+			//setCurrentDateStr(dateFormat.format(getCurrentTime()));
+			model.addObject("getCurrentDate",dateFormat.format(getCurrentTime()));
+			DateFormat timeFormat = new SimpleDateFormat("hh:mm a");
+			model.addObject("getCurrentTime", timeFormat.format(getCurrentTime()));
+						
+			//setHandscanheaderList(this.handscanservice.getHandScanList());
+			model.addObject("timeclocker", new TimeClocker());
+			model.addObject("handScanRecord", new HandScanRecord());		
+			
+			return model;
 		}
-		
-		/*Clockin and out information*/
-		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-		//setCurrentDateStr(dateFormat.format(getCurrentTime()));
-		model.addObject("getCurrentDate",dateFormat.format(getCurrentTime()));
-		DateFormat timeFormat = new SimpleDateFormat("hh:mm a");
-		model.addObject("getCurrentTime", timeFormat.format(getCurrentTime()));
-		
-		
-		//setHandscanheaderList(this.handscanservice.getHandScanList());
-		model.addObject("timeclocker", new TimeClocker());
-		model.addObject("handScanRecord", new HandScanRecord());		
-		
-		return model;
+	}
+	
+	@RequestMapping("/payPeriodSubmit")
+	public ModelAndView payPeriodSubmit(@SessionAttribute("appuser") AppUser appuser, @ModelAttribute UserSalaryType userSalaryType){
+		logger.trace("HandScanController-payPeriodSubmit");
+		userSalaryType.setAppUser(appuser);
+		userSalaryType.setTzCode("CDS");
+		//userSalaryType.setUserSeq(appuser.getUserSeq());
+		if(userservice.addUserSalaryType(userSalaryType).equals("SUCCESS")){
+			ModelAndView model  = new ModelAndView("handscan/timeclock"); 
+			
+			String userId = appuser.getUserId();
+	
+			HandScanHeader hsh = this.handscanservice.getHandScanOfTerm(getCurrentTime(), userId);
+			
+			if(hsh != null && hsh.getHeaderSeq() != null){
+				System.out.println("header ID: "+ hsh.getHeaderSeq());
+				setHandscanheader(hsh);
+			}
+			
+			/*Clockin and out information*/
+			DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+			//setCurrentDateStr(dateFormat.format(getCurrentTime()));
+			model.addObject("getCurrentDate",dateFormat.format(getCurrentTime()));
+			DateFormat timeFormat = new SimpleDateFormat("hh:mm a");
+			model.addObject("getCurrentTime", timeFormat.format(getCurrentTime()));
+						
+			//setHandscanheaderList(this.handscanservice.getHandScanList());
+			model.addObject("timeclocker", new TimeClocker());
+			model.addObject("handScanRecord", new HandScanRecord());		
+			
+			return model;
+		}else{
+			return null;
+		}
 	}
 	
 
@@ -87,13 +149,11 @@ public class HandScanController {
 	public ModelAndView submit(@SessionAttribute("appuser") AppUser appuser, @ModelAttribute TimeClocker hs){
 		String status = null;
 		System.out.println("HandScanController @ submit()");
-		System.out.println(getHandscanheader().getHeaderId());
+		System.out.println(getHandscanheader().getHeaderSeq());
 		System.out.println(hs.getScanDateStr());
 		System.out.println(hs.getScanTimeStr());
-		
 	
-		
-		if(getHandscanrecord() != null && getHandscanrecord().getRecordId() != null) {
+		if(getHandscanrecord() != null && getHandscanrecord().getRecordSeq() != null) {
 			HandScanHeader handscanheader = new HandScanHeader();
 			HandScanRecord handscanrecord = new HandScanRecord();
 			setHandscanrecord(setHandScanRecordFromUI(hs, handscanrecord));
@@ -174,5 +234,13 @@ public class HandScanController {
 
 	public void setAppuserContext(AppUser appuserContext) {
 		this.appuserContext = appuserContext;
+	}
+
+	public UserService getUserservice() {
+		return userservice;
+	}
+
+	public void setUserservice(UserService userservice) {
+		this.userservice = userservice;
 	}
 }

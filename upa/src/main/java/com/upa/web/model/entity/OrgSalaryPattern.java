@@ -22,11 +22,11 @@ import javax.persistence.TemporalType;
 public class OrgSalaryPattern extends BaseEntity{
 
 	@Id
-	@Column(name="ORG_SP_ID", unique = true, nullable = false)
+	@Column(name="ORG_SP_SEQ", unique = true, nullable = false)
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	Long orgspId;
+	Long orgspSeq;
 	
-	@JoinColumn(name="ORG_ID", nullable=false)
+	@JoinColumn(name="ORG_SEQ", nullable=false)
 	@ManyToOne(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
 	Organization organization;
 	
@@ -46,20 +46,20 @@ public class OrgSalaryPattern extends BaseEntity{
 	
 	public OrgSalaryPattern(){};
 	
-	public OrgSalaryPattern(Long orgspId, Organization organization, Date firstDate, Date lastDate, String frequencyType){
-		this.orgspId = orgspId;
+	public OrgSalaryPattern(Long orgspSeq, Organization organization, Date firstDate, Date lastDate, String frequencyType){
+		this.orgspSeq = orgspSeq;
 		this.organization = organization;
 		this.firstDate = firstDate;
 		this.lastDate = lastDate;
 		this.frequencyType = frequencyType;
 	}
 
-	public Long getOrgspId() {
-		return orgspId;
+	public Long getOrgspSeq() {
+		return orgspSeq;
 	}
 
-	public void setOrgspId(Long orgspId) {
-		this.orgspId = orgspId;
+	public void setOrgspSeq(Long orgspSeq) {
+		this.orgspSeq = orgspSeq;
 	}
 
 	public Organization getOrganization() {

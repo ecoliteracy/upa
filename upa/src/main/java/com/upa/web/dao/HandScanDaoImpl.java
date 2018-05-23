@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.persistence.Entity;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.TemporalType;
@@ -158,7 +157,7 @@ public class HandScanDaoImpl {
 		}
 	}
 
-	public List<Date> getParticipateTime(Long id) {
+	public List<Date> getParticipateTime(Integer id) {
 		//List<HandScanHeader> hsList = (List<HandScanHeader>) sessionFactory.getCurrentSession().createCriteria(HandScanHeader.class);
 		List<Date> participationTime = new ArrayList<Date>();
 		Session session = sessionFactory.openSession();

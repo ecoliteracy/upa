@@ -12,9 +12,9 @@ import javax.persistence.Table;
 public class AlertMessage extends BaseEntity{
 
 	@Id
-	@Column(name="MESSAGE_ID", unique = true, nullable = false)
+	@Column(name="MESSAGE_SEQ", unique = true, nullable = false)
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	Long messageId;
+	Integer messageSeq;
 	
 	@Column(name="MESSAGE_CODE")
 	String messageCode;
@@ -30,19 +30,19 @@ public class AlertMessage extends BaseEntity{
 	
 	public AlertMessage(){};
 	
-	public AlertMessage(Long messageId, String messageCode, String messageType, String languageCode, String messageValue){
-		this.messageId = messageId;
+	public AlertMessage(Integer messageSeq, String messageCode, String messageType, String languageCode, String messageValue){
+		this.messageSeq = messageSeq;
 		this.messageCode = messageCode;
 		this.messageType = messageType;
 		this.messageValue = messageValue;
 	}
 
-	public Long getMessageId() {
-		return messageId;
+	public Integer getMessageSeq() {
+		return messageSeq;
 	}
 
-	public void setMessageId(Long messageId) {
-		this.messageId = messageId;
+	public void setMessageSeq(Integer messageSeq) {
+		this.messageSeq = messageSeq;
 	}
 
 	public String getMessageCode() {

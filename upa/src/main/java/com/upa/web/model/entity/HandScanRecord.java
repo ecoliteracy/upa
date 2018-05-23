@@ -20,13 +20,13 @@ import javax.persistence.Transient;
 @Table(schema = "upa", name="upa_hand_scan_record")
 public class HandScanRecord extends BaseEntity{
 	
-	@JoinColumn(name="HEADER_ID", nullable=false)
+	@JoinColumn(name="HEADER_SEQ", nullable=false)
 	@ManyToOne(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
 	HandScanHeader handScanHeader;
 	@Id
-	@Column(name="RECORD_ID")
+	@Column(name="RECORD_SEQ")
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	Long recordId;
+	Integer recordSeq;
 	@Temporal(TemporalType.DATE)
 	@Column(name="SCAN_DATE")
 	Date scanDate;
@@ -52,8 +52,8 @@ public class HandScanRecord extends BaseEntity{
 		
 	}
 	
-	public HandScanRecord(Long id, String scanDateStr, String scanTimeStr, Date ScanInDateTime, Date scanOutDateTime, Date hour, HandScanHeader handScanHeader){
-		this.recordId=id;
+	public HandScanRecord(Integer id, String scanDateStr, String scanTimeStr, Date ScanInDateTime, Date scanOutDateTime, Date hour, HandScanHeader handScanHeader){
+		this.recordSeq=id;
 		this.scanDateStr=scanDateStr;
 		this.scanTimeStr=scanTimeStr;
 		this.scanInTime=ScanInDateTime;
@@ -62,12 +62,12 @@ public class HandScanRecord extends BaseEntity{
 		this.handScanHeader=handScanHeader;
 	}
 	
-	public Long getRecordId() {
-		return recordId;
+	public Integer getRecordSeq() {
+		return recordSeq;
 	}
 
-	public void setRecordId(Long recordId) {
-		this.recordId = recordId;
+	public void setRecordSeq(Integer recordId) {
+		this.recordSeq = recordId;
 	}
 	
 	public String getScanDateStr() {

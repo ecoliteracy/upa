@@ -19,7 +19,7 @@ public class Organization extends BaseEntity{
 	@Id
 	@Column(name="ORG_ID", unique = true, nullable = false)
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	Long orgId;
+	Integer orgSeq;
 	
 	@Column(name="ORG_TYPE")
 	String orgType;
@@ -32,18 +32,18 @@ public class Organization extends BaseEntity{
 	
 	public Organization(){};
 	
-	public Organization(Long orgId, String orgType, String orgName){
-		this.orgId = orgId;
+	public Organization(Integer orgSeq, String orgType, String orgName){
+		this.orgSeq = orgSeq;
 		this.orgType = orgType;
 		this.orgName = orgName;
 	}
 
-	public Long getOrgId() {
-		return orgId;
+	public Integer getOrgSeq() {
+		return orgSeq;
 	}
 
-	public void setOrgId(Long orgId) {
-		this.orgId = orgId;
+	public void setOrgSeq(Integer orgId) {
+		this.orgSeq = orgId;
 	}
 
 	public String getOrgType() {

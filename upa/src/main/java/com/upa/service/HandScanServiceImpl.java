@@ -62,7 +62,7 @@ public class HandScanServiceImpl implements HandScanService{
 			e.printStackTrace();
 		}
 		
-		if(hr != null && hr.getRecordId() != null){
+		if(hr != null && hr.getRecordSeq() != null){
 			//update case
 			EntityUtils.setupAuditTrail(hr, Boolean.FALSE);
 		}else{
@@ -114,11 +114,10 @@ public class HandScanServiceImpl implements HandScanService{
 		}
 		
 		System.out.println("[3]=====HandScanServiceImpl=====");
-		System.out.println(h.getAppuser().getUserId());
+		System.out.println(h.getAppuser().getUserSeq());
 		System.out.println(h.getFirstDate());
 		System.out.println(h.getLastDate());
 		System.out.println(h.getRemainingHour());
-		System.out.println(h.getTermType());
 		System.out.println(h.getTotalHour());
 		hr.setHandScanHeader(h);
 		
@@ -178,7 +177,7 @@ public class HandScanServiceImpl implements HandScanService{
 			e.printStackTrace();
 		}
 		
-		if(hr != null && hr.getRecordId() != null){
+		if(hr != null && hr.getRecordSeq() != null){
 			//update case
 			EntityUtils.setupAuditTrail(hr, Boolean.FALSE);
 		}else{
@@ -186,7 +185,7 @@ public class HandScanServiceImpl implements HandScanService{
 			EntityUtils.setupAuditTrail(hr, Boolean.TRUE);
 		}
 		
-		if(hr.getHandScanHeader() != null && hr.getHandScanHeader().getHeaderId() != null){
+		if(hr.getHandScanHeader() != null && hr.getHandScanHeader().getHeaderSeq() != null){
 			EntityUtils.setupAuditTrail(hr.getHandScanHeader(), Boolean.FALSE);
 		}else{
 			EntityUtils.setupAuditTrail(hr.getHandScanHeader(), Boolean.TRUE);
@@ -225,7 +224,7 @@ public class HandScanServiceImpl implements HandScanService{
 	}
 	
 	private void saveHeaderInfo(HandScanRecord hr, HandScanHeader h) {
-		List<Date> times = handscandao.getParticipateTime(h.getHeaderId());
+		List<Date> times = handscandao.getParticipateTime(h.getHeaderSeq());
 		long totalHr = 0L; 
 		System.out.println("saveHeaderInfo: "+ times);
 		long hT = 0L;
@@ -295,7 +294,7 @@ public class HandScanServiceImpl implements HandScanService{
 	@Override
 	public HandScanRecord getMatchingHandScanRecord(HandScanHeader hd, String dateComp) {
 		try {
-			if(hd != null && hd.getHeaderId() != null){
+			if(hd != null && hd.getHeaderSeq() != null){
 				if(hd.getHandscanrecords()!=null && hd.getHandscanrecords().size() > 0){
 					for(HandScanRecord hsr : hd.getHandscanrecords()){
 						if(hsr.getScanDate() != null){

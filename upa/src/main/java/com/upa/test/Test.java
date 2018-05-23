@@ -27,7 +27,7 @@ public class Test {
 	
 	private static void testLogin(){
 		AppUser l = new AppUser();
-		l.setLoginId("KIWASAKI");
+		l.setUserId("KIWASAKI");
 		l.setUserPassword("welcome1");
 		//System.out.println(userservice.isValidUserPassword(l));
 	}

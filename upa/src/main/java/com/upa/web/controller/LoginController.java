@@ -7,13 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.upa.service.UserService;
+import com.upa.service.logger.ILoggerService;
+import com.upa.service.logger.LoggerServiceImpl;
 import com.upa.web.beans.MyBean;
 import com.upa.web.model.UserValidationResult;
 import com.upa.web.model.entity.AppUser;
@@ -23,6 +24,9 @@ import com.upa.web.model.entity.AppUser;
 //@SessionAttributes(value ="appuser", types={AppUser.class})
 @SessionAttributes("appuser")
 public class LoginController {
+	
+	private final ILoggerService LOG = new LoggerServiceImpl(this.getClass());
+
 	/*
 	 * Add appuser in model attribute
 	 */
@@ -52,7 +56,6 @@ public class LoginController {
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView getdata() {
 		System.out.println("LoginController.getdata");
-
 		
 		List<String> list = getList();
 
@@ -74,14 +77,14 @@ public class LoginController {
 	//@PostMapping("/loginProcess")
 	@RequestMapping(value = "/loginProcess", method = RequestMethod.POST)
 	public ModelAndView loginProcess(@ModelAttribute("appuser") AppUser appuser){
+		LOG.logTrace("LoginController - loginProcess()");
 		
-		System.out.println("LoginController.loginProcess");
-		ModelAndView mv = null;
+    	ModelAndView mv = null;
 		
 		UserValidationResult rs = this.userservice.isValidUserPassword(appuser);
 		String rtnrst = rs.getValidationResult();
 				
-		if(rtnrst.equals("VALID")){
+		if(rtnrst.equals("VALID")){			
 			mv = new ModelAndView("index");
 			appuser = rs.getAppuser();
 			mv.addObject("appuser", appuser);

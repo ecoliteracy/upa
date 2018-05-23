@@ -22,16 +22,13 @@ import javax.persistence.TemporalType;
 public class HandScanHeader extends BaseEntity{
 
 	@Id
-	@Column(name="HEADER_ID", unique = true, nullable = false)
+	@Column(name="HEADER_SEQ", unique = true, nullable = false)
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	Long headerId;
+	Integer headerSeq;
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="USER_ID")
 	AppUser appuser;
-	
-	@Column(name="TERM_TYPE")
-	String termType;
 	
 	@Temporal(TemporalType.DATE)
 	@Column(name="FIRST_DATE")
@@ -52,9 +49,8 @@ public class HandScanHeader extends BaseEntity{
 
 	public HandScanHeader(){};
 
-	public HandScanHeader(Long id, Date firstDate, Date lastDate, String termType,  Long totalHour, Long remainingHour, List<HandScanRecord> handscanrecords){
-		this.headerId=id;
-		this.termType = termType;
+	public HandScanHeader(Integer id, Date firstDate, Date lastDate, Long totalHour, Long remainingHour, List<HandScanRecord> handscanrecords){
+		this.headerSeq=id;
 		this.firstDate = firstDate;
 		this.lastDate = lastDate;
 		this.totalHour = totalHour;
@@ -62,20 +58,12 @@ public class HandScanHeader extends BaseEntity{
 		this.handscanrecords = handscanrecords;
 	}
 	
-	public Long getHeaderId() {
-		return headerId;
+	public Integer getHeaderSeq() {
+		return headerSeq;
 	}
 
-	public void setHeaderId(Long headerId) {
-		this.headerId = headerId;
-	}
-
-	public String getTermType() {
-		return termType;
-	}
-
-	public void setTermType(String termType) {
-		this.termType = termType;
+	public void setHeaderId(Integer headerSeq) {
+		this.headerSeq = headerSeq;
 	}
 
 	public Date getFirstDate() {

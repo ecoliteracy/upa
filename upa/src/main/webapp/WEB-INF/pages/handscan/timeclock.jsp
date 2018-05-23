@@ -23,20 +23,10 @@
 		First Date:
 		<form:input id="firstdatepicker" 
 			path="timeclocker.firstDate"></form:input><br /> 
-		Billing Period: 
-		<select id="billingperiodselect" name="item"
-			onchange="addDateToLastDate()">
-			<option value="0"></option>
-			<option value="1">Monthly</option>
-			<option value="2">Twice a month</option>
-			<option value="3">Bi-Weekly</option>
-			<option value="4">Weekly</option>
-			<option value="5">Daily</option>
-		</select><br /> 
 		Last Date :
 		<form:input id="lastdatepicker"
 			path="timeclocker.lastDate"></form:input>
-		<br />
+		<br/>
 
 	</div>
 	<form:form method="POST" modelAttribute="timeclocker" action="submit">

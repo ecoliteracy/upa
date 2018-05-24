@@ -1,13 +1,12 @@
 package com.upa.web.controller;
 
-import java.sql.Time;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.hibernate.type.descriptor.java.TimeZoneTypeDescriptor.TimeZoneComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +19,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.upa.service.HandScanService;
 import com.upa.service.UserService;
-import com.upa.service.logger.ILoggerService;
-import com.upa.service.logger.LoggerServiceImpl;
 import com.upa.web.config.ApplicationProperties;
 import com.upa.web.constant.HandScanConstant;
 import com.upa.web.model.TimeClocker;
@@ -29,6 +26,8 @@ import com.upa.web.model.entity.AppUser;
 import com.upa.web.model.entity.HandScanHeader;
 import com.upa.web.model.entity.HandScanRecord;
 import com.upa.web.model.entity.UserSalaryType;
+
+import antlr.collections.List;
 
 @Controller
 public class HandScanController {
@@ -42,6 +41,8 @@ public class HandScanController {
 	
 	private HandScanHeader handscanheader = new HandScanHeader();
 	private HandScanRecord handscanrecord = new HandScanRecord();
+	private TimeClocker timeClocker = new TimeClocker();
+
 	
 	private AppUser appuserContext;
 
@@ -66,47 +67,167 @@ public class HandScanController {
 	public ModelAndView getData(@SessionAttribute("appuser") AppUser appuser){
 		//forwards to timeclock.jsp at WEB-INF/pages/handscan/timeclock.jsp
 		logger.trace("HandScanController.getData");
-		ModelAndView model  = new ModelAndView(); 
-		
-		TimeClocker hs = new TimeClocker();
-		
-		Integer userSeq = appuser.getUserSeq();
-		
+		ModelAndView model  = new ModelAndView(); 		
 		//User's profile
-		UserSalaryType userSalaryType = this.userservice.getUserSalaryType(userSeq);
-		
+		UserSalaryType userSalaryType = this.userservice.getUserSalaryType(appuser.getUserSeq());
 		if(userSalaryType == null){
 			model  = new ModelAndView("profiles/appuser/salarytype");
 			userSalaryType = new UserSalaryType();
-			//userSalaryType.setAppUser(appuser);
 			model.addObject("userSalaryType", userSalaryType);
 			model.addObject("appuser", appuser);
 			return model;
-		}else{
-			model  = new ModelAndView("handscan/timeclock"); 
-			
-			String userId = appuser.getUserId();
-	
-			HandScanHeader hsh = this.handscanservice.getHandScanOfTerm(getCurrentTime(), userId);
-			
-			if(hsh != null && hsh.getHeaderSeq() != null){
-				System.out.println("header ID: "+ hsh.getHeaderSeq());
-				setHandscanheader(hsh);
-			}
-			
-			/*Clockin and out information*/
-			DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-			model.addObject("getCurrentDate",dateFormat.format(getCurrentTime()));
-			DateFormat timeFormat = new SimpleDateFormat("hh:mm a");
-			model.addObject("getCurrentTime", timeFormat.format(getCurrentTime()));
-						
-			model.addObject("timeclocker", new TimeClocker());
-			model.addObject("handScanRecord", new HandScanRecord());		
-			
-			return model;
+		}else{				
+			return forwardToTimeClockUI(appuser,userSalaryType);			
 		}
 	}
 	
+	
+	@RequestMapping("/submitUserPayPeriod")
+	public ModelAndView submitUserPayPeriod(@SessionAttribute("appuser") AppUser appuser, @ModelAttribute UserSalaryType userSalaryType){
+		logger.trace("HandScanController-submitUserPayPeriod");
+		userSalaryType.setAppUser(appuser);
+		userSalaryType.setTzCode("CDS");
+		userSalaryType.setLastDate(addTimePortion(userSalaryType.getLastDate()));		
+		//Insert the record to the dabase
+		String status = userservice.addUserSalaryType(userSalaryType);
+		if(status.equals("SUCCESS")){			
+			return forwardToTimeClockUI(appuser,userSalaryType);
+		}else{
+			return null;
+		}
+	}
+	
+	
+	private ModelAndView forwardToTimeClockUI(AppUser appuser, UserSalaryType userSalaryType){
+		ModelAndView model  = new ModelAndView("handscan/timeclock"); 
+		
+		String userId = appuser.getUserId();
+
+		handscanheader = this.handscanservice.getHandScanOfTerm(getCurrentTime(), userId);
+		
+		if(handscanheader != null && handscanheader.getHeaderSeq() != null){
+			System.out.println("header ID: "+ handscanheader.getHeaderSeq());
+			setHandscanheader(handscanheader);
+		}else{
+			handscanheader = new HandScanHeader();
+			handscanheader.setFirstDate(userSalaryType.getFirstDate());
+			handscanheader.setLastDate(userSalaryType.getLastDate());
+			handscanheader.setAppuser(appuser);
+			handscanheader = adjustDateRange(handscanheader,getCurrentTime(),userSalaryType.getPayPeriodType());
+		}
+		
+		/*Clockin and out information*/
+		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+		//setCurrentDateStr(dateFormat.format(getCurrentTime()));
+		model.addObject("getCurrentDate",dateFormat.format(getCurrentTime()));
+		DateFormat timeFormat = new SimpleDateFormat("hh:mm a");
+		model.addObject("getCurrentTime", timeFormat.format(getCurrentTime()));
+					
+		//setHandscanheaderList(this.handscanservice.getHandScanList());
+		timeClocker = new TimeClocker();		
+		timeClocker.setFirstDate(handscanheader.getFirstDate());
+		timeClocker.setLastDate(handscanheader.getLastDate());
+		
+		model.addObject("timeclocker", timeClocker);
+		model.addObject("handScanRecord", new HandScanRecord());		
+		
+		return model;
+	}
+	
+	private Boolean isSameDate(Date scanDate, String UiEnteredDate){
+		try{
+			SimpleDateFormat formatterD = new SimpleDateFormat("MM/dd/yyyy");
+			Date checkinDate = formatterD.parse(UiEnteredDate);
+			if( checkinDate.equals(scanDate) ){
+				return Boolean.TRUE;
+			}else{
+				return Boolean.FALSE;
+			}
+		}catch(Exception e){
+			return null;
+		}
+
+	}
+
+	
+	@RequestMapping("/submit")
+	public ModelAndView submit(@SessionAttribute("appuser") AppUser appuser, @ModelAttribute TimeClocker timeclocker){
+		String status = null;
+		logger.trace("HandScanController - submit()");
+			if(getHandscanheader()!= null){
+				//Header is already in DB.  Search Records for the day
+				if(getHandscanheader().getHandscanrecords() != null){
+					for(HandScanRecord hsr : getHandscanheader().getHandscanrecords()){
+						if(isSameDate(hsr.getScanDate(), timeclocker.getScanDateStr() )){
+							if(hsr.getScanInDateTime()!=null && timeclocker.getClockInOut().equals("I") ){
+								//This is invalid.  It is already checked in.
+								break;
+							}else if(hsr.getScanOutTime()!=null && timeclocker.getClockInOut().equals("O") ){
+								//This is invalid.  It is already checked in.
+								break;
+							}else{
+								//This is valid.
+								setHandscanrecord(setHandScanRecordFromUI(timeclocker, handscanrecord));								
+								handscanrecord = hsr;
+								break;
+							}
+						}
+					}
+				}else{
+					//Create Record
+					handscanrecord = new HandScanRecord();
+ 					ArrayList<HandScanRecord> hsrs = new ArrayList<HandScanRecord>();
+
+ 					handscanrecord.setType(timeclocker.getClockInOut());
+ 					setHandscanrecord(setHandScanRecordFromUI(timeclocker, handscanrecord));
+					handscanrecord.setHandScanHeader(getHandscanheader());
+					hsrs.add(handscanrecord);
+					handscanheader.setHandscanrecords(hsrs);
+				}
+			}
+		
+
+		if(handscanrecord != null && handscanrecord.getRecordSeq() != null) {
+			
+			//status = this.handscanservice.addHandScanRecordUpdateHeader(handscanrecord, getHandscanheader());
+		}
+		
+		status = this.handscanservice.addHandScan(handscanrecord, getHandscanheader());
+		
+		ModelAndView mv = new ModelAndView();
+
+		if(status==null){
+			mv = new ModelAndView("timeclock/handScanResult");
+			mv.addObject("handScansList", this.handscanservice.getHandScanList());
+			mv.addObject("msg", "The HandScan has been submitted.");
+			return mv;
+		}else{
+			mv.addObject("msg", status);
+			return mv;
+		}
+	}
+	
+	private HandScanRecord setHandScanRecordFromUI(TimeClocker tc, HandScanRecord handscanrecord){
+		SimpleDateFormat formatterD = new SimpleDateFormat("MM/dd/yyyy");
+		SimpleDateFormat formatterT = new SimpleDateFormat("hh:mm a");
+		try {
+			if(handscanrecord.getScanDate() == null){
+				handscanrecord.setScanDate(formatterD.parse(tc.getScanDateStr()));
+			}
+			if(tc.getClockInOut().equals("I")){
+				handscanrecord.setScanInTime(formatterT.parse(tc.getScanTimeStr()));
+			}else if(tc.getClockInOut().equals("O")){
+				handscanrecord.setScanOutTime(formatterT.parse(tc.getScanTimeStr()));
+			}
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return handscanrecord; 
+	}
+	
+	
+	//Tools	
 	private Date addTimePortion(Date date){
 		Calendar c = Calendar.getInstance();
 		c.setTime(date);
@@ -159,109 +280,7 @@ public class HandScanController {
 		}
 		
 		return c.getTime();
-		
     }
-	
-	@RequestMapping("/submitUserPayPeriod")
-	public ModelAndView submitUserPayPeriod(@SessionAttribute("appuser") AppUser appuser, @ModelAttribute UserSalaryType userSalaryType){
-		logger.trace("HandScanController-submitUserPayPeriod");
-		userSalaryType.setAppUser(appuser);
-		userSalaryType.setTzCode("CDS");
-		userSalaryType.setLastDate(addTimePortion(userSalaryType.getLastDate()));		
-		//Insert the record to the dabase
-		String status = userservice.addUserSalaryType(userSalaryType);
-		if(status.equals("SUCCESS")){
-			ModelAndView model  = new ModelAndView("handscan/timeclock"); 
-			
-			String userId = appuser.getUserId();
-	
-			HandScanHeader hsh = this.handscanservice.getHandScanOfTerm(getCurrentTime(), userId);
-			
-			if(hsh != null && hsh.getHeaderSeq() != null){
-				System.out.println("header ID: "+ hsh.getHeaderSeq());
-				setHandscanheader(hsh);
-			}else{
-				hsh = new HandScanHeader();
-				hsh.setFirstDate(userSalaryType.getFirstDate());
-				hsh.setLastDate(userSalaryType.getLastDate());
-				hsh = adjustDateRange(hsh,getCurrentTime(),userSalaryType.getPayPeriodType());
-			}
-			
-			/*Clockin and out information*/
-			DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-			//setCurrentDateStr(dateFormat.format(getCurrentTime()));
-			model.addObject("getCurrentDate",dateFormat.format(getCurrentTime()));
-			DateFormat timeFormat = new SimpleDateFormat("hh:mm a");
-			model.addObject("getCurrentTime", timeFormat.format(getCurrentTime()));
-						
-			//setHandscanheaderList(this.handscanservice.getHandScanList());
-			TimeClocker timeClocker = new TimeClocker();
-			
-			timeClocker.setFirstDate(hsh.getFirstDate());
-			timeClocker.setLastDate(hsh.getLastDate());
-			
-			model.addObject("timeclocker", timeClocker);
-			model.addObject("handScanRecord", new HandScanRecord());		
-			
-			return model;
-		}else{
-			return null;
-		}
-	}
-	
-
-	
-	@RequestMapping("/submit")
-	public ModelAndView submit(@SessionAttribute("appuser") AppUser appuser, @ModelAttribute TimeClocker hs){
-		String status = null;
-		System.out.println("HandScanController @ submit()");
-		System.out.println(getHandscanheader().getHeaderSeq());
-		System.out.println(hs.getScanDateStr());
-		System.out.println(hs.getScanTimeStr());
-	
-		if(getHandscanrecord() != null && getHandscanrecord().getRecordSeq() != null) {
-			HandScanHeader handscanheader = new HandScanHeader();
-			HandScanRecord handscanrecord = new HandScanRecord();
-			setHandscanrecord(setHandScanRecordFromUI(hs, handscanrecord));
-			status = this.handscanservice.addHandScanRecordUpdateHeader(getHandscanrecord(), getHandscanheader());
-		}else{
-			status = this.handscanservice.addHandScan(getHandscanrecord(), getHandscanheader());
-		}
-		
-		ModelAndView mv = new ModelAndView("timeclock/handScanResult");
-				
-		if(status==null){
-			mv.addObject("handScansList", this.handscanservice.getHandScanList());
-			mv.addObject("msg", "The HandScan has been submitted.");
-			return mv;
-		}else{
-			mv.addObject("msg", status);
-			return mv;
-		}
-	}
-	
-	
-	private HandScanHeader setHandScanHeaderFromUI(TimeClocker tc, HandScanHeader hs){
-		//tc.
-		return null;
-	}
-	
-	private HandScanRecord setHandScanRecordFromUI(TimeClocker tc, HandScanRecord handscanrecord){
-		SimpleDateFormat formatterD = new SimpleDateFormat("MM/dd/yyyy");
-		SimpleDateFormat formatterT = new SimpleDateFormat("hh:mm a");
-		try {
-			handscanrecord.setScanDate(formatterD.parse(tc.getScanDateStr()));
-			if(tc.getClockInOut().equals("I")){
-				handscanrecord.setScanInTime(formatterT.parse(tc.getScanTimeStr()));
-			}else{
-				handscanrecord.setScanOutTime(formatterT.parse(tc.getScanTimeStr()));
-			}
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return handscanrecord; 
-	}
 	
 	
 	

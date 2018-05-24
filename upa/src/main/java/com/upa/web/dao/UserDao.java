@@ -66,7 +66,7 @@ public class UserDao {
 			uvr.setValidationResult("NOT_FOUND");
 			return uvr;
 		}finally {
-			session.close(); 
+			session.close();
 		}
 	}
 	
@@ -79,7 +79,7 @@ public class UserDao {
 
 		try{
 			tx = session.beginTransaction();
-			String HQL_QUERY = "From UserSalaryType where userSeq = :userSeq ";
+			String HQL_QUERY = "From UserSalaryType where appUser.userSeq = :userSeq ";
 			Query query = session.createQuery(HQL_QUERY, UserSalaryType.class);
 			query.setParameter("userSeq", userSeq);
 
@@ -98,8 +98,7 @@ public class UserDao {
 		}
 		finally {
 			session.close(); 
-		}
-		
+		}		
 		return userSalaryType;
 	}
 	

@@ -27,7 +27,7 @@ public class HandScanHeader extends BaseEntity{
 	Integer headerSeq;
 	
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="USER_ID")
+	@JoinColumn(name="USER_SEQ", nullable=false)
 	AppUser appuser;
 	
 	@Temporal(TemporalType.DATE)

@@ -19,27 +19,103 @@
 </head>
 <body>
 	<p>App User Profile</p>
-
-	<p>This is for ${appuser.userId} </p>
-	<form:form method="POST" modelAttribute="userSalaryType" action="payPeriodSubmit">
-	
-		Pay Period: 
-		<form:select id="billingperiodselect" name="item" path="payPeriodType">
-			<option value="0"></option>
-			<option value="1">Monthly</option>
-			<option value="2">Twice a month</option>
-			<option value="3">Bi-Weekly</option>
-			<option value="4">Weekly</option>
-			<option value="5">Daily</option>
-		</form:select><br/> 
-	
-	<div id="appUserProfile">
-		<button id="primaryTextButton" type="submit" value="payPeriodSubmit">Submit</button>
-	</div>
+	<p>This is for ${appuser.userId}</p>
+	<form:form method="POST" modelAttribute="userSalaryType"
+		action="submitUserPayPeriod">
+		<div id="appUserProfile">
+			First Date:
+			<form:input id="firstdatepicker" path="firstDate"></form:input>
+			<br /> Payroll Period:
+			<form:select id="billingperiodselect" name="item"
+				onchange="addDateToLastDate()" path="payPeriodType">
+				<option value="0"></option>
+				<option value="1">Monthly</option>
+				<option value="2">Twice a month</option>
+				<option value="3">Bi-Weekly</option>
+				<option value="4">Weekly</option>
+				<option value="5">Daily</option>
+			</form:select>
+			<br/> 
+			Last Date :
+			<form:input id="lastdatepicker" path="lastDate" readonly="true"></form:input>
+			<br/>
+			<button id="primaryTextButton" type="submit"
+				value="submitUserPayPeriod">Submit</button>
+		</div>
 	</form:form>
-	
 </body>
 <script>
-	$(document).ready(function() {});
+$(document).ready(function() {
+	// create below from input HTML element
+	$("#billingperiodselect").kendoDropDownList();
+	/*How to get the value of this DropDownList*/
+	//var billingperiodselect = $("#billingperiodselect").data("kendoDropDownList"); 
+	
+	$("#datetimepicker").kendoDateTimePicker({});
+
+	$("#datepicker").kendoDatePicker({
+		animation : {
+			close : {
+				effects : "fadeOut zoom:out",
+				duration : 200
+			},
+			open : {
+				effects : "fadeIn zoom:in",
+				duration : 200
+			}
+		}
+	});
+	
+	$("#firstdatepicker").kendoDatePicker({
+		animation : {
+			close : {
+				effects : "fadeOut zoom:out",
+				duration : 200
+			},
+			open : {
+				effects : "fadeIn zoom:in",
+				duration : 200
+			}
+		}
+	});
+	
+	$("#lastdatepicker").kendoDatePicker({
+		animation : {
+			close : {
+				effects : "fadeOut zoom:out",
+				duration : 200
+			},
+			open : {
+				effects : "fadeIn zoom:in",
+				duration : 200
+			}
+		}
+	});
+	
+	$("#timepicker").kendoTimePicker({
+		interval : 5,
+		animation : {
+			close : {
+				effects : "fadeOut zoom:out",
+				duration : 200
+			},
+			open : {
+				effects : "fadeIn zoom:in",
+				duration : 200
+			}
+		}
+	});
+
+	$("#monthpicker").kendoDatePicker({
+		// defines the start view
+		start : "year",
+
+		// defines when the calendar should return date
+		depth : "year",
+
+		// display month and year in the input
+		format : "MMMM yyyy"
+	});
+});
 </script>
 </html>

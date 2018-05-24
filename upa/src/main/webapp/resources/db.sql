@@ -1,3 +1,15 @@
+/*To Remove all things*/
+DROP TABLE IF EXISTS upa.upa_alert_message;
+DROP TABLE IF EXISTS upa.upa_hand_scan_record;
+DROP TABLE IF EXISTS upa.upa_hand_scan;
+DROP TABLE IF EXISTS upa.upa_user_salary_type;
+DROP TABLE IF EXISTS upa.app_user;
+DROP TABLE IF EXISTS upa.upa_org_salary_pattern;
+DROP TABLE IF EXISTS upa.upa_organization;
+commit;
+
+
+
 DROP TABLE IF EXISTS upa.upa_org_salary_pattern;
 DROP TABLE IF EXISTS upa.upa_organization;
 CREATE TABLE upa.upa_organization (
@@ -16,7 +28,6 @@ CREATE TABLE upa.upa_org_salary_pattern (
   ORG_SEQ INT(10) UNSIGNED NOT NULL,
   FIRST_DATE DATE NOT NULL,
   LAST_DATE DATE NOT NULL,
-  FREQUENCY_TYPE VARCHAR(3) NOT NULL, 
   TZ_CODE VARCHAR(3) NOT NULL,
   CREATED_DATE DATETIME NOT NULL,
   LAST_MODIFIED_DATE DATETIME NOT NULL, 
@@ -49,25 +60,24 @@ commit;
 
 select * from upa.app_user;
 
-
 DROP TABLE IF EXISTS upa.upa_user_salary_type;
 CREATE TABLE upa.upa_user_salary_type (
-  USER_SEQ INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  USER_SAL_TYPE_SEQ INT(10) UNSIGNED DEFAULT NULL,
+  USER_SEQ INT(10) UNSIGNED NOT NULL,
+  USER_SAL_TYPE_SEQ INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   SALARY_AMT DECIMAL(10,2) NULL,
   SALARY_CURRENCY_CODE VARCHAR(3) NULL,
   EXEMPT_IND INT(1) NULL, 
   PAY_PERIOD_TYPE VARCHAR(3) NULL,
+  FIRST_DATE DATE NOT NULL,
+  LAST_DATE DATE NOT NULL,
   TZ_CODE VARCHAR(3) NOT NULL,
   CREATED_DATE DATETIME NOT NULL,	
   LAST_MODIFIED_DATE DATETIME NOT NULL, 
-  PRIMARY KEY (USER_SEQ),
-  KEY fk_appuser_sal_type (USER_SAL_TYPE_SEQ),
-  CONSTRAINT fk_appuser_sal_type FOREIGN KEY (USER_SAL_TYPE_SEQ) REFERENCES upa.app_user (USER_SEQ) ON DELETE CASCADE ON UPDATE CASCADE
+  PRIMARY KEY (USER_SAL_TYPE_SEQ),
+  KEY fk_appuser_sal_type (USER_SEQ),
+  CONSTRAINT fk_appuser_sal_type FOREIGN KEY (USER_SEQ) REFERENCES upa.app_user (USER_SEQ) ON DELETE CASCADE ON UPDATE CASCADE
   )
   ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-commit;
 
 select * from upa.upa_user_salary_type;
 /*
@@ -86,7 +96,9 @@ CREATE TABLE upa.upa_hand_scan (
   TZ_CODE VARCHAR(3) NOT NULL,
   CREATED_DATE DATETIME NOT NULL,
   LAST_MODIFIED_DATE DATETIME NOT NULL,
-  FOREIGN KEY (USER_SEQ) REFERENCES upa.app_user(USER_SEQ))
+  #FOREIGN KEY (USER_SEQ) REFERENCES upa.app_user(USER_SEQ)
+  CONSTRAINT fk_appuser_handscan FOREIGN KEY (USER_SEQ) REFERENCES upa.app_user (USER_SEQ) ON DELETE CASCADE ON UPDATE CASCADE
+  )
   ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -101,7 +113,8 @@ CREATE TABLE upa.upa_hand_scan_record (
   CREATED_DATE DATETIME NOT NULL,
   LAST_MODIFIED_DATE DATETIME NOT NULL,
   PRIMARY KEY (RECORD_SEQ) USING BTREE,
-  FOREIGN KEY (HEADER_SEQ) REFERENCES upa.upa_hand_scan(HEADER_SEQ))
+  FOREIGN KEY (HEADER_SEQ) REFERENCES upa.upa_hand_scan(HEADER_SEQ)
+  )
   ENGINE=InnoDB DEFAULT CHARSET=utf8;
   
 
@@ -127,16 +140,5 @@ values(1,'DUP', 'ERR',  'EN', 'The entered value is already existed.', 'US3', sy
 commit;
 
 
-
-
-
-
-/*To Remove all things*/
-DROP TABLE IF EXISTS upa.upa_alert_message;
-DROP TABLE IF EXISTS upa.upa_hand_scan_record;
-DROP TABLE IF EXISTS upa.upa_hand_scan;
-DROP TABLE IF EXISTS upa.upa_user_salary_type;
-DROP TABLE IF EXISTS upa.app_user;
-DROP TABLE IF EXISTS upa.upa_org_salary_pattern;
-DROP TABLE IF EXISTS upa.upa_organization;
-commit;
+select * from upa.upa_hand_scan_record;
+select * from upa.upa_hand_scan;

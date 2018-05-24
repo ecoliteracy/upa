@@ -19,7 +19,9 @@
 </head>
 <body>
 	<form:form method="POST" modelAttribute="timeclocker" action="submit">
-	<p>Time Clocker for ${appuser.userId} from ${timeclocker.firstDate} to ${timeclocker.lastDate}</p>
+	<p>Time Clocker for ${appuser.userId}</p>
+	<p>From ${timeclocker.firstDate}</p>
+	<p>To   ${timeclocker.lastDate}</p>
 	<div id="timeclockerApp">
 		<div
 			style="border-width: 1px; border-style: solid; border-color: rgb(125, 125, 125); width: 250px;">

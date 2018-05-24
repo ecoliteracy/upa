@@ -34,12 +34,48 @@ public class HandScanDaoImpl {
 	}
 
 	public String saveHandscan(HandScanRecord handscan){
-		sessionFactory.getCurrentSession().saveOrUpdate(handscan);
+		Session session = sessionFactory.openSession();
+ 
+		try{
+			session.beginTransaction();
+			session.getSessionFactory().getCurrentSession().saveOrUpdate(handscan);
+			
+		}catch (HibernateException e) {
+			session.getTransaction().rollback();
+			e.printStackTrace();
+			return null;
+		}catch(NoResultException e){
+			session.getTransaction().rollback();
+			e.printStackTrace();
+ 			return null;
+		}finally {
+			session.getTransaction().commit();
+			session.close();
+			sessionFactory.close();
+		}
 		return HandScanConstant.SUCCESS;
 	}
 	
 	public String saveHandscanHeader(HandScanHeader hs) {
-		sessionFactory.getCurrentSession().saveOrUpdate(hs);
+		Session session = sessionFactory.openSession();
+		try{
+			session.beginTransaction();
+		//sessionFactory.getCurrentSession().saveOrUpdate(hs);
+			session.getSessionFactory().getCurrentSession().saveOrUpdate(hs);
+		}catch (HibernateException e) {
+			session.getTransaction().rollback();
+			e.printStackTrace();
+			return null;
+		}catch(NoResultException e){
+			session.getTransaction().rollback();
+			e.printStackTrace();
+			return null;
+		}finally {
+			session.getTransaction().commit();
+			session.close();
+			sessionFactory.close();
+
+		}
 		return HandScanConstant.SUCCESS;
 	}
 	
@@ -71,6 +107,7 @@ public class HandScanDaoImpl {
 	         return null;
 	      }finally {
 	         session.close();
+			 sessionFactory.close();
 	      }
 	}
 	
@@ -79,11 +116,9 @@ public class HandScanDaoImpl {
 		//List<HandScanHeader> hsList = (List<HandScanHeader>) sessionFactory.getCurrentSession().createCriteria(HandScanHeader.class);
 		Session session = sessionFactory.openSession();
 		Transaction tx = null;
-		System.out.println("2018-05-18-02");
 		try{
 			tx = session.beginTransaction();
 			// Create HQL Between clause
-			//String HQL_QUERY = "FROM HandScanHeader where firstDate <= :date";// and lastDate >= :date ";
 			String HQL_QUERY = "FROM HandScanHeader where firstDate <= :date and lastDate >= :date and appuser.userId = :userId";
 
 			Query query = session.createQuery(HQL_QUERY);
@@ -100,9 +135,9 @@ public class HandScanDaoImpl {
 //			if(obj!=null){
 //				hs = (HandScanHeader)obj; 
 //			}
-//			if(hs != null){
-//				hs.getHandscanrecords();
-//			}
+			if(hs != null){
+				hs.getHandscanrecords();
+			}
 
 			tx.commit();
 			return hs;
@@ -119,6 +154,8 @@ public class HandScanDaoImpl {
 			//todo: java.lang.String cannot be cast to java.lang.Long when NoResult
 			e.printStackTrace();
 			session.close();
+			sessionFactory.close();
+
 			return null;
 		}
 	}
@@ -153,7 +190,8 @@ public class HandScanDaoImpl {
 			//e.printStackTrace();
 			return null;
 		}finally {
-			session.close(); 
+			session.close();
+			sessionFactory.close();
 		}
 	}
 
@@ -194,6 +232,7 @@ public class HandScanDaoImpl {
 			return null;
 		}catch(NoResultException e){
 			session.close(); 
+			sessionFactory.close();
 			return null;
 		}
 	}

@@ -21,7 +21,7 @@ import com.upa.web.model.entity.HandScanRecord;
 public class HandScanServiceImpl implements HandScanService{
 
 	private static List<HandScanRecord> handScansList;
-	
+ 	
 	private static HandScanConstant handscanConstant = new HandScanConstant();
 	
 	private static HandScanValidation validation = new HandScanValidation();
@@ -39,27 +39,24 @@ public class HandScanServiceImpl implements HandScanService{
 	
 	public List<HandScanHeader> getHandScanList(){
 		return handscandao.getHandScan();
-	}
-	
-	
-	
-	
+	}	
 	
 	@Transactional
 	public String addHandScan(HandScanRecord hr, HandScanHeader h){
 		handScansList = new ArrayList<HandScanRecord>();
-		SimpleDateFormat formatterD = new SimpleDateFormat("MM/dd/yyyy");
-		SimpleDateFormat formatterT = new SimpleDateFormat("hh:mm a");
-		try {
-			hr.setScanDate(formatterD.parse(hr.getScanDateStr()));
-			if(hr.getType().equals("I")){
-				hr.setScanInTime(formatterT.parse(hr.getScanTimeStr()));
-			}else{
-				hr.setScanOutTime(formatterT.parse(hr.getScanTimeStr()));
-			}
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		
+		//Validation
+		String errorMsg = validation.checkInOutTime(hr);
+		if(errorMsg != null){
+			return errorMsg;
+		}
+		
+		if(h != null && h.getHeaderSeq() != null){
+			//update case
+			EntityUtils.setupAuditTrail(h, Boolean.FALSE);
+		}else{
+			//insert case
+			EntityUtils.setupAuditTrail(h, Boolean.TRUE);			
 		}
 		
 		if(hr != null && hr.getRecordSeq() != null){
@@ -75,30 +72,7 @@ public class HandScanServiceImpl implements HandScanService{
 		System.out.println(hr.getTzCode());
 		System.out.println(hr.getLastModifiedDate());
 		System.out.println(hr.getCreatedDate());
-		
-		/*
-		if(h != null && h.getHeaderId() != null){
-			
-			EntityUtils.setupAuditTrail(h, Boolean.FALSE);
-		}else{
-			try {
-				h = createHandScanHeaderObj(hr.getScanDate(), handscanConstant.FIRST_DATE);
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			handScansList.add(hr);
-			h.setHandscanrecords(handScansList);
-			h.setTermType(handscanConstant.TERM_GOAL);
-			EntityUtils.setupAuditTrail(h, Boolean.TRUE);
-		}
-		*/
-		
-		System.out.println("[2]=====HandScanServiceImpl=====");
-		System.out.println(h.getTzCode());
-		System.out.println(h.getLastModifiedDate());
-		System.out.println(h.getCreatedDate());
-		
+				
 		hr.setParticipationTime(getHourInRecord(hr));
 		if(hr.getParticipationTime()!=null){
 			h.setTotalHour(hr.getParticipationTime().getTime());	
@@ -113,7 +87,7 @@ public class HandScanServiceImpl implements HandScanService{
 			h.setRemainingHour(0L);
 		}
 		
-		System.out.println("[3]=====HandScanServiceImpl=====");
+		System.out.println("[2]=====HandScanServiceImpl=====");
 		System.out.println(h.getAppuser().getUserSeq());
 		System.out.println(h.getFirstDate());
 		System.out.println(h.getLastDate());
@@ -121,6 +95,7 @@ public class HandScanServiceImpl implements HandScanService{
 		System.out.println(h.getTotalHour());
 		hr.setHandScanHeader(h);
 		
+//		handscandao.saveHandscanHeader(h);
 		handscandao.saveHandscan(hr);
 		
 		handScansList.add(hr);
@@ -161,20 +136,13 @@ public class HandScanServiceImpl implements HandScanService{
 	
 	@Transactional
 	public String addHandScanRecordUpdateHeader(HandScanRecord hr, HandScanHeader h){
-		handScansList = new ArrayList<HandScanRecord>();
-		SimpleDateFormat formatterD = new SimpleDateFormat("MM/dd/yyyy");
-		SimpleDateFormat formatterT = new SimpleDateFormat("hh:mm a");
-		try {
-			if(hr.getType().equals("I")){
-				hr.setScanDate(formatterD.parse(hr.getScanDateStr()));
-				hr.setScanInTime(formatterT.parse(hr.getScanTimeStr()));
-			}else{
-				hr.setScanDate(formatterD.parse(hr.getScanDateStr()));
-				hr.setScanOutTime(formatterT.parse(hr.getScanTimeStr()));
-			}
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		
+		if(h != null && h.getHeaderSeq() != null){
+			//update case
+			EntityUtils.setupAuditTrail(h, Boolean.FALSE);
+		}else{
+			//insert case
+			EntityUtils.setupAuditTrail(h, Boolean.TRUE);
 		}
 		
 		if(hr != null && hr.getRecordSeq() != null){

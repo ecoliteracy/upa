@@ -66,12 +66,6 @@ public class HandScanServiceImpl implements HandScanService{
 			//insert case
 			EntityUtils.setupAuditTrail(hr, Boolean.TRUE);			
 		}
-		
-		//
-		System.out.println("[1]=====HandScanServiceImpl=====");
-		System.out.println(hr.getTzCode());
-		System.out.println(hr.getLastModifiedDate());
-		System.out.println(hr.getCreatedDate());
 				
 		hr.setParticipationTime(getHourInRecord(hr));
 		if(hr.getParticipationTime()!=null){
@@ -86,13 +80,6 @@ public class HandScanServiceImpl implements HandScanService{
 		}else{
 			h.setRemainingHour(0L);
 		}
-		
-		System.out.println("[2]=====HandScanServiceImpl=====");
-		System.out.println(h.getAppuser().getUserSeq());
-		System.out.println(h.getFirstDate());
-		System.out.println(h.getLastDate());
-		System.out.println(h.getRemainingHour());
-		System.out.println(h.getTotalHour());
 		hr.setHandScanHeader(h);
 		
 //		handscandao.saveHandscanHeader(h);
@@ -104,7 +91,6 @@ public class HandScanServiceImpl implements HandScanService{
 	}
 	
 	private long getHourMin(String hourMinStr){
-		System.out.println("getHourMin: "+ hourMinStr);
 		SimpleDateFormat formatterT = new SimpleDateFormat("hh:mm");
 		Date hrMin = null;
 		try{
@@ -123,10 +109,6 @@ public class HandScanServiceImpl implements HandScanService{
 		if(hm1==0L || hm2==0L)
 			return 0L;
 		long diff = hm1 - hm2;
-		System.out.println("getSubtrHrMin - diff: "+ diff);
-		System.out.println("hm1: "+ hm1);
-		System.out.println("hm2: "+ hm2);
-		
 		long diffHours = diff/(60*60*1000);//%24;
 		long diffMinutes = diff / (60 * 1000) % 60;
 				
@@ -185,8 +167,6 @@ public class HandScanServiceImpl implements HandScanService{
 		if(h != null && h.getHandscanrecords() != null && h.getHandscanrecords().size() > 0){
 			h.setTotalHour(getSumOfParticipation(h.getHandscanrecords()));
 			h.setRemainingHour(getSubtrHrMin(getHourMin(handscanConstant.TERM_GOAL+":00"), h.getTotalHour()));
-			System.out.println(h.getTotalHour());
-			System.out.println(h.getRemainingHour());
 		}
 		return h;
 	}
@@ -194,25 +174,18 @@ public class HandScanServiceImpl implements HandScanService{
 	private void saveHeaderInfo(HandScanRecord hr, HandScanHeader h) {
 		List<Date> times = handscandao.getParticipateTime(h.getHeaderSeq());
 		long totalHr = 0L; 
-		System.out.println("saveHeaderInfo: "+ times);
 		long hT = 0L;
 		if(times != null && times.size() > 0){
-			System.out.println("times is not null");
 			for(Date t: times){
-				System.out.println("saveHeaderInfo: "+t.getTime());
 				hT = t.getTime() + hT;
 			}
-
-			System.out.println("hT: "+hT);
 			long th = hT / (60*60*1000) %24;
 			long tm = hT / (60 * 1000) % 60;
 			String timeStr = String.valueOf(th)+":"+String.valueOf(tm);
 			
 			totalHr = th + tm;
 		}else{
-			System.out.println("times is null");
 			if(hr.getParticipationTime() != null){
-				System.out.println("Take it from ParticipationTime");
 				totalHr  = hr.getParticipationTime().getTime();
 			}else{
 				return;
@@ -221,43 +194,8 @@ public class HandScanServiceImpl implements HandScanService{
 
 		h.setTotalHour(totalHr);
 		h.setRemainingHour(getSubtrHrMin(getHourMin(handscanConstant.TERM_GOAL+":00"), h.getTotalHour()));
-		System.out.println(h.getTotalHour());
-		System.out.println(h.getRemainingHour());
 		handscandao.saveHandscanHeader(h);
 	}
-	/*
-	private void saveHeaderInfo(HandScanRecord hr, HandScanHeader h) {
-		long hT = 0L;
-		long th = 0L;
-		long tm = 0L;
-		
-		if(h.getTotalHour() != null){
-			hT = h.getTotalHour().getTime();	
-		}
-		
-		if(hr.getScanInDateTime() != null && hr.getScanOutTime() != null){
-				if(hr.getParticipationTime() != null){
-					long t = hr.getParticipationTime().getTime() + hT;
-					th = t / (60*60*1000) %24;
-					tm = t / (60 * 1000) % 60;
-				}
-				String timeStr = String.valueOf(th)+":"+String.valueOf(tm);
-				SimpleDateFormat formatterT = new SimpleDateFormat("hh:mm");
-				Date totalHr = null;
-				try {
-					totalHr = formatterT.parse(timeStr);
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				h.setTotalHour(totalHr);
-				h.setRemainingHour(getSubtrHrMin(getHourMin(handscanConstant.TERM_GOAL+":00"), h.getTotalHour()));
-				System.out.println(h.getTotalHour());
-				System.out.println(h.getRemainingHour());
-				handscandao.saveHandscanHeader(h);	
-		}
-	}*/
 
 	@Override
 	public HandScanRecord getMatchingHandScanRecord(HandScanHeader hd, String dateComp) {

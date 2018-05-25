@@ -55,8 +55,6 @@ public class LoginController {
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView getdata() {
-		System.out.println("LoginController.getdata");
-		
 		List<String> list = getList();
 
 	    //This is where the default page is set. Depending on the purpose, change the default jsp.	

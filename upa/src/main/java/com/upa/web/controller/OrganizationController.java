@@ -33,8 +33,6 @@ public class OrganizationController extends BaseController{
 	 
 	@RequestMapping(value="/organizationView")
 	public ModelAndView getData(@SessionAttribute("appuser") AppUser appuser){
-		System.out.println("OrganizationController @ getData()");
-		
 		model = new ModelAndView("profiles/organization/organization");
 		
 		Map<String,String> orgTypeList = new LinkedHashMap<String,String>();
@@ -50,10 +48,6 @@ public class OrganizationController extends BaseController{
 	
 	@RequestMapping("/submitNewOrg")
 	public ModelAndView submit(@SessionAttribute("appuser") AppUser appuser, @ModelAttribute Organization org){
-		
-		System.out.println("OrganizationController @ submit()");
-		System.out.println(org.getOrgName());
-		
 		String result = orgSrv.addNewOrg(org);
 		if(result.equals(OrganizationConstant.SUCCESS)){
 			model = new ModelAndView("profiles/organization/orgConfirm");

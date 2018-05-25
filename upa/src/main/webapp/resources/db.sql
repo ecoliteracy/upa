@@ -8,8 +8,6 @@ DROP TABLE IF EXISTS upa.upa_org_salary_pattern;
 DROP TABLE IF EXISTS upa.upa_organization;
 commit;
 
-
-
 DROP TABLE IF EXISTS upa.upa_org_salary_pattern;
 DROP TABLE IF EXISTS upa.upa_organization;
 CREATE TABLE upa.upa_organization (
@@ -79,7 +77,6 @@ CREATE TABLE upa.upa_user_salary_type (
   )
   ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-select * from upa.upa_user_salary_type;
 /*
 upa_hand_scan
 */
@@ -140,5 +137,3 @@ values(1,'DUP', 'ERR',  'EN', 'The entered value is already existed.', 'US3', sy
 commit;
 
 
-select * from upa.upa_hand_scan_record;
-select * from upa.upa_hand_scan;

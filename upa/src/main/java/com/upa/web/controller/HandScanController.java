@@ -88,7 +88,7 @@ public class HandScanController {
 		userSalaryType.setAppUser(appuser);
 		userSalaryType.setTzCode("CDS");
 		userSalaryType.setLastDate(addTimePortion(userSalaryType.getLastDate()));		
-		//Insert the record to the dabase
+		//Insert the record to the database
 		String status = userservice.addUserSalaryType(userSalaryType);
 		if(status.equals("SUCCESS")){			
 			return forwardToTimeClockUI(appuser,userSalaryType);
@@ -106,7 +106,6 @@ public class HandScanController {
 		handscanheader = this.handscanservice.getHandScanOfTerm(getCurrentTime(), userId);
 		
 		if(handscanheader != null && handscanheader.getHeaderSeq() != null){
-			System.out.println("header ID: "+ handscanheader.getHeaderSeq());
 			setHandscanheader(handscanheader);
 		}else{
 			handscanheader = new HandScanHeader();
@@ -118,12 +117,10 @@ public class HandScanController {
 		
 		/*Clockin and out information*/
 		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-		//setCurrentDateStr(dateFormat.format(getCurrentTime()));
 		model.addObject("getCurrentDate",dateFormat.format(getCurrentTime()));
 		DateFormat timeFormat = new SimpleDateFormat("hh:mm a");
 		model.addObject("getCurrentTime", timeFormat.format(getCurrentTime()));
 					
-		//setHandscanheaderList(this.handscanservice.getHandScanList());
 		timeClocker = new TimeClocker();		
 		timeClocker.setFirstDate(handscanheader.getFirstDate());
 		timeClocker.setLastDate(handscanheader.getLastDate());
@@ -153,6 +150,8 @@ public class HandScanController {
 	@RequestMapping("/submit")
 	public ModelAndView submit(@SessionAttribute("appuser") AppUser appuser, @ModelAttribute TimeClocker timeclocker){
 		String status = null;
+		ModelAndView mv = new ModelAndView();
+
 		logger.trace("HandScanController - submit()");
 			if(getHandscanheader()!= null){
 				//Header is already in DB.  Search Records for the day
@@ -161,40 +160,31 @@ public class HandScanController {
 						if(isSameDate(hsr.getScanDate(), timeclocker.getScanDateStr() )){
 							if(hsr.getScanInDateTime()!=null && timeclocker.getClockInOut().equals("I") ){
 								//This is invalid.  It is already checked in.
-								break;
+								mv.addObject("msg", "Already exists the Clock In for "+ timeclocker.getScanDateStr() );
+								return mv;								
 							}else if(hsr.getScanOutTime()!=null && timeclocker.getClockInOut().equals("O") ){
 								//This is invalid.  It is already checked in.
-								break;
-							}else{
-								//This is valid.
-								setHandscanrecord(setHandScanRecordFromUI(timeclocker, handscanrecord));								
-								handscanrecord = hsr;
-								break;
+								mv.addObject("msg", "Already exists the Clock Out for "+ timeclocker.getScanDateStr() );
+								return mv;	
 							}
+
+							setHandscanrecord(updateHandScanRecordFromUI(timeclocker, hsr));								
+							
+							break;
 						}
 					}
 				}else{
 					//Create Record
 					handscanrecord = new HandScanRecord();
  					ArrayList<HandScanRecord> hsrs = new ArrayList<HandScanRecord>();
-
- 					handscanrecord.setType(timeclocker.getClockInOut());
- 					setHandscanrecord(setHandScanRecordFromUI(timeclocker, handscanrecord));
+ 					setHandscanrecord(updateHandScanRecordFromUI(timeclocker, handscanrecord));
 					handscanrecord.setHandScanHeader(getHandscanheader());
 					hsrs.add(handscanrecord);
 					handscanheader.setHandscanrecords(hsrs);
 				}
 			}
-		
 
-		if(handscanrecord != null && handscanrecord.getRecordSeq() != null) {
-			
-			//status = this.handscanservice.addHandScanRecordUpdateHeader(handscanrecord, getHandscanheader());
-		}
-		
 		status = this.handscanservice.addHandScan(handscanrecord, getHandscanheader());
-		
-		ModelAndView mv = new ModelAndView();
 
 		if(status==null){
 			mv = new ModelAndView("timeclock/handScanResult");
@@ -207,7 +197,7 @@ public class HandScanController {
 		}
 	}
 	
-	private HandScanRecord setHandScanRecordFromUI(TimeClocker tc, HandScanRecord handscanrecord){
+	private HandScanRecord updateHandScanRecordFromUI(TimeClocker tc, HandScanRecord handscanrecord){
 		SimpleDateFormat formatterD = new SimpleDateFormat("MM/dd/yyyy");
 		SimpleDateFormat formatterT = new SimpleDateFormat("hh:mm a");
 		try {
@@ -225,7 +215,6 @@ public class HandScanController {
 		}
 		return handscanrecord; 
 	}
-	
 	
 	//Tools	
 	private Date addTimePortion(Date date){
@@ -281,9 +270,7 @@ public class HandScanController {
 		
 		return c.getTime();
     }
-	
-	
-	
+		
 	private Date getCurrentTime(){
 		Date date = new Date();
 		return date;

@@ -24,15 +24,12 @@ public class OrganizationServiceImpl implements OrganizationService{
 	
 	@Transactional
 	public String addNewOrg(Organization org){
-		System.out.println("OrganizationServiceImpl.addNewOrg");
-
 		org.setLastModifiedDate(new Date());
 		org.setTzCode("CDT");
 		org.setCreatedDate(new Date());
 		
 		//Validation - 1. Duplication Check
 		if(organizationDaoImpl.getOrganization(org.getOrgName()) != null){
-			System.out.println("OrganizationServiceImpl.addNewOrg() - DUPLICATED");
 			return OrganizationConstant.DUPLICATED;
 		}
 		

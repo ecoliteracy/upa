@@ -38,7 +38,8 @@ public class HandScanDaoImpl {
  
 		try{
 			session.beginTransaction();
-			session.getSessionFactory().getCurrentSession().saveOrUpdate(handscan);
+			//session.getSessionFactory().getCurrentSession().saveOrUpdate(handscan);
+			session.getSessionFactory().getCurrentSession().merge(handscan);
 			
 		}catch (HibernateException e) {
 			session.getTransaction().rollback();
@@ -51,7 +52,7 @@ public class HandScanDaoImpl {
 		}finally {
 			session.getTransaction().commit();
 			session.close();
-			sessionFactory.close();
+			
 		}
 		return HandScanConstant.SUCCESS;
 	}
@@ -60,8 +61,9 @@ public class HandScanDaoImpl {
 		Session session = sessionFactory.openSession();
 		try{
 			session.beginTransaction();
-		//sessionFactory.getCurrentSession().saveOrUpdate(hs);
-			session.getSessionFactory().getCurrentSession().saveOrUpdate(hs);
+			//sessionFactory.getCurrentSession().saveOrUpdate(hs);
+			//session.getSessionFactory().getCurrentSession().saveOrUpdate(hs);
+			session.getSessionFactory().getCurrentSession().merge(hs);
 		}catch (HibernateException e) {
 			session.getTransaction().rollback();
 			e.printStackTrace();
@@ -73,7 +75,7 @@ public class HandScanDaoImpl {
 		}finally {
 			session.getTransaction().commit();
 			session.close();
-			sessionFactory.close();
+			
 
 		}
 		return HandScanConstant.SUCCESS;
@@ -106,8 +108,7 @@ public class HandScanDaoImpl {
 	         e.printStackTrace();
 	         return null;
 	      }finally {
-	         session.close();
-			 sessionFactory.close();
+	         session.close();			 
 	      }
 	}
 	
@@ -154,8 +155,6 @@ public class HandScanDaoImpl {
 			//todo: java.lang.String cannot be cast to java.lang.Long when NoResult
 			e.printStackTrace();
 			session.close();
-			sessionFactory.close();
-
 			return null;
 		}
 	}
@@ -190,8 +189,7 @@ public class HandScanDaoImpl {
 			//e.printStackTrace();
 			return null;
 		}finally {
-			session.close();
-			sessionFactory.close();
+			session.close();			
 		}
 	}
 
@@ -231,8 +229,7 @@ public class HandScanDaoImpl {
 			session.close(); 
 			return null;
 		}catch(NoResultException e){
-			session.close(); 
-			sessionFactory.close();
+			session.close();			
 			return null;
 		}
 	}

@@ -24,6 +24,8 @@ public class UserDao {
 	@Autowired
 	private SessionFactory sessionFactory;
 	
+	//private SessionFactory sessionFactory = getSessionFactory();
+	
 	public UserDao(){}
 	
 	public UserValidationResult isValidUserPassword(AppUser l){
@@ -31,6 +33,7 @@ public class UserDao {
 		UserValidationResult uvr = new UserValidationResult();
 
 		Session session = sessionFactory.openSession();
+		//Session session = getOpenSession();
 		Transaction tx = null;
 
 		try{
@@ -65,6 +68,10 @@ public class UserDao {
 			//e.printStackTrace();
 			uvr.setValidationResult("NOT_FOUND");
 			return uvr;
+		}catch(Exception e){
+			e.printStackTrace();
+			uvr.setValidationResult("ERROR");
+			return uvr;
 		}finally {
 			session.close();
 		}
@@ -75,6 +82,7 @@ public class UserDao {
 		UserSalaryType userSalaryType = new UserSalaryType();
 		
 		Session session = sessionFactory.openSession();
+		//Session session = getOpenSession();
 		Transaction tx = null;
 
 		try{
@@ -105,14 +113,15 @@ public class UserDao {
 	public String addUserSalaryType(UserSalaryType userSalaryType){
 		logger.trace("UserDao - addUserSalaryType");
 		Session session = sessionFactory.openSession();
+		//Session session = getOpenSession();
+		
 		//Transaction transaction = null;
 		try{
 		    //transaction = session.getTransaction();
 		    //transaction.begin();
 			
 		    session.beginTransaction();
-		    Integer i = (Integer) session.getSession().save(userSalaryType);
-		    logger.trace("Generated Identifier:"+ i);
+		    session.getSession().merge(userSalaryType);
 			session.getTransaction().commit();
 
 			//sessionFactory.getCurrentSession().saveOrUpdate(userSalaryType);

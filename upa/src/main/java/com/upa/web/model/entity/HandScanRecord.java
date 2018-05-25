@@ -41,21 +41,12 @@ public class HandScanRecord extends BaseEntity{
 	Date participationTime;
 	
 	
-	@Transient 
-	String scanDateStr;
-	@Transient
-	String scanTimeStr;
-	@Transient
-	String type;
-	
 	public HandScanRecord(){
 		
 	}
 	
-	public HandScanRecord(Integer id, String scanDateStr, String scanTimeStr, Date ScanInDateTime, Date scanOutDateTime, Date hour, HandScanHeader handScanHeader){
+	public HandScanRecord(Integer id, Date ScanInDateTime, Date scanOutDateTime, Date hour, HandScanHeader handScanHeader){
 		this.recordSeq=id;
-		this.scanDateStr=scanDateStr;
-		this.scanTimeStr=scanTimeStr;
 		this.scanInTime=ScanInDateTime;
 		this.scanOutTime=scanOutDateTime;
 		this.participationTime = hour;
@@ -70,30 +61,6 @@ public class HandScanRecord extends BaseEntity{
 		this.recordSeq = recordId;
 	}
 	
-	public String getScanDateStr() {
-		return scanDateStr;
-	}
-
-	public void setScanDateStr(String scanDateStr) {
-		this.scanDateStr = scanDateStr;
-	}
-
-	public String getScanTimeStr() {
-		return scanTimeStr;
-	}
-
-	public void setScanTimeStr(String scanTimeStr) {
-		this.scanTimeStr = scanTimeStr;
-	}
-	
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
 	public Date getScanDate() {
 		return scanDate;
 	}

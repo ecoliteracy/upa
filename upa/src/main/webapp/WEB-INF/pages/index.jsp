@@ -12,17 +12,10 @@
 </head>
 
 <body>
-
-	<!-- 
-	<h2>Spring MVC and List Example</h2>
-	<h2>MyBean: ${myBean.name}</h2>
-	<h2>MyBean: ${hi}</h2>
-	<h:input type="button" id="sample_button" value="getCurrentDateTime"
-		onclick="getCurrentDateString()" />
-			 -->
-
 	<h3>
-		<a href="timeclock">Hand Scan Menu</a><br><br> 
+		<a href="timeclock">Hand Scan Menu</a><br><br>
+		<a href="timeclockrecord">Time Clock Sheet</a><br><br>
+		 
 		<a href="mytest">My Sandbox - all samples are here</a><br><br>
 		<a href="showEmployeeForm">Add Employee</a><br><br>
 		<a href="organizationView">Add Company</a><br><br>

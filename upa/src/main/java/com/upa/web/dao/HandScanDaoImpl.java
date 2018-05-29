@@ -108,7 +108,7 @@ public class HandScanDaoImpl {
 	         e.printStackTrace();
 	         return null;
 	      }finally {
-	         session.close();			 
+	         session.close();
 	      }
 	}
 	
@@ -161,14 +161,14 @@ public class HandScanDaoImpl {
 
 	
 	@SuppressWarnings("unchecked")
-	public HandScanHeader getHandScanHeaderById(long id) {
+	public HandScanHeader getHandScanHeaderById(Integer id) {
 		//List<HandScanHeader> hsList = (List<HandScanHeader>) sessionFactory.getCurrentSession().createCriteria(HandScanHeader.class);
 		Session session = sessionFactory.openSession();
 		Transaction tx = null;
 		try{
 			tx = session.beginTransaction();
 			// Create HQL Between clause
-			String HQL_QUERY = "FROM HandScanHeader where headerId <= :id";// and lastDate >= :date ";
+			String HQL_QUERY = "FROM HandScanHeader where headerSeq = :id";// and lastDate >= :date ";
 
 			Query query = session.createQuery(HQL_QUERY);
 

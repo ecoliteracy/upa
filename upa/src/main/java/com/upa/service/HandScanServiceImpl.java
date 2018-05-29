@@ -277,4 +277,8 @@ public class HandScanServiceImpl implements HandScanService{
 		}
 		return diffTime;
 	}
+	
+	public HandScanHeader getHandScanHeaderById(Integer id){
+		return handscandao.getHandScanHeaderById(id);
+	}
 }

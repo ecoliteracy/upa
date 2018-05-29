@@ -81,6 +81,24 @@ public class HandScanController {
 		}
 	}
 	
+	@RequestMapping(value="/timeclockrecord")
+	public ModelAndView forwardToRecord(@SessionAttribute("appuser") AppUser appuser){
+		//forwards to timeclock.jsp at WEB-INF/pages/handscan/timeclock.jsp
+		logger.trace("HandScanController-forwardToRecord");
+		ModelAndView mv  = new ModelAndView(); 		
+		
+		handscanheader = this.handscanservice.getHandScanOfTerm(getCurrentTime(), appuser.getUserId());
+		if(handscanheader != null){
+			mv = new ModelAndView("handscan/handScanResult");
+			mv.addObject("handscanheader", this.handscanheader);
+			mv.addObject("msg", "The HandScan has been submitted.");
+			return mv;		
+			}else{
+			//The result not found for this user
+			return null;
+		}
+	}
+	
 	
 	@RequestMapping("/submitUserPayPeriod")
 	public ModelAndView submitUserPayPeriod(@SessionAttribute("appuser") AppUser appuser, @ModelAttribute UserSalaryType userSalaryType){
@@ -95,8 +113,7 @@ public class HandScanController {
 		}else{
 			return null;
 		}
-	}
-	
+	}	
 	
 	private ModelAndView forwardToTimeClockUI(AppUser appuser, UserSalaryType userSalaryType){
 		ModelAndView model  = new ModelAndView("handscan/timeclock"); 
@@ -143,7 +160,6 @@ public class HandScanController {
 		}catch(Exception e){
 			return null;
 		}
-
 	}
 
 	
@@ -151,44 +167,49 @@ public class HandScanController {
 	public ModelAndView submit(@SessionAttribute("appuser") AppUser appuser, @ModelAttribute TimeClocker timeclocker){
 		String status = null;
 		ModelAndView mv = new ModelAndView();
-
+		boolean isRecordForTheDayFound = false;
 		logger.trace("HandScanController - submit()");
-			if(getHandscanheader()!= null){
-				//Header is already in DB.  Search Records for the day
-				if(getHandscanheader().getHandscanrecords() != null){
-					for(HandScanRecord hsr : getHandscanheader().getHandscanrecords()){
-						if(isSameDate(hsr.getScanDate(), timeclocker.getScanDateStr() )){
-							if(hsr.getScanInDateTime()!=null && timeclocker.getClockInOut().equals("I") ){
-								//This is invalid.  It is already checked in.
-								mv.addObject("msg", "Already exists the Clock In for "+ timeclocker.getScanDateStr() );
-								return mv;								
-							}else if(hsr.getScanOutTime()!=null && timeclocker.getClockInOut().equals("O") ){
-								//This is invalid.  It is already checked in.
-								mv.addObject("msg", "Already exists the Clock Out for "+ timeclocker.getScanDateStr() );
-								return mv;	
-							}
-
-							setHandscanrecord(updateHandScanRecordFromUI(timeclocker, hsr));								
-							
-							break;
+		if(getHandscanheader()!= null){
+			//Header is already in DB.  Search Records for the day
+			if(getHandscanheader().getHandscanrecords() != null){
+				for(HandScanRecord hsr : getHandscanheader().getHandscanrecords()){
+					if(isSameDate(hsr.getScanDate(), timeclocker.getScanDateStr() )){
+						isRecordForTheDayFound = true;
+						if(hsr.getScanInDateTime()!=null && timeclocker.getClockInOut().equals("I") ){
+							//This is invalid.  It is already checked in.
+							mv.addObject("msg", "Already exists the Clock In for "+ timeclocker.getScanDateStr() );
+							return mv;								
+						}else if(hsr.getScanOutTime()!=null && timeclocker.getClockInOut().equals("O") ){
+							//This is invalid.  It is already checked in.
+							mv.addObject("msg", "Already exists the Clock Out for "+ timeclocker.getScanDateStr() );
+							return mv;
 						}
+
+						setHandscanrecord(updateHandScanRecordFromUI(timeclocker, hsr));								
+
+						break;
 					}
-				}else{
-					//Create Record
-					handscanrecord = new HandScanRecord();
- 					ArrayList<HandScanRecord> hsrs = new ArrayList<HandScanRecord>();
- 					setHandscanrecord(updateHandScanRecordFromUI(timeclocker, handscanrecord));
-					handscanrecord.setHandScanHeader(getHandscanheader());
-					hsrs.add(handscanrecord);
-					handscanheader.setHandscanrecords(hsrs);
 				}
 			}
+		}
+
+		if(!isRecordForTheDayFound){
+			//Create Record
+			handscanrecord = new HandScanRecord();
+			ArrayList<HandScanRecord> hsrs = new ArrayList<HandScanRecord>();
+			setHandscanrecord(updateHandScanRecordFromUI(timeclocker, handscanrecord));
+			handscanrecord.setHandScanHeader(getHandscanheader());
+			hsrs.add(handscanrecord);
+			handscanheader.setHandscanrecords(hsrs);
+		}
 
 		status = this.handscanservice.addHandScan(handscanrecord, getHandscanheader());
 
 		if(status==null){
-			mv = new ModelAndView("timeclock/handScanResult");
-			mv.addObject("handScansList", this.handscanservice.getHandScanList());
+
+			handscanheader = handscanservice.getHandScanHeaderById(handscanheader.getHeaderSeq());
+			mv = new ModelAndView("handscan/handScanResult");
+			mv.addObject("handscanheader", this.handscanheader);
 			mv.addObject("msg", "The HandScan has been submitted.");
 			return mv;
 		}else{

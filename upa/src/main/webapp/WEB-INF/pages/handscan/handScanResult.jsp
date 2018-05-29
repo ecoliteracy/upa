@@ -5,14 +5,26 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>Spring 4 MVC - HelloWorld Index Page</title>
+<link rel="stylesheet"	href="https://kendo.cdn.telerik.com/2017.1.223/styles/kendo.common-material.min.css" />
+<link rel="stylesheet"	href="https://kendo.cdn.telerik.com/2017.1.223/styles/kendo.material.min.css" />
+<link rel="stylesheet"	href="https://kendo.cdn.telerik.com/2017.1.223/styles/kendo.material.mobile.min.css" />
+<link href="resources/css/main.css" rel="stylesheet" type="text/css" />
+<script src="https://kendo.cdn.telerik.com/2017.1.223/js/jquery.min.js"></script>
+<script	src="https://kendo.cdn.telerik.com/2017.1.223/js/kendo.all.min.js"></script>
+<script type="text/javascript" src="resources/js/app.js"></script>
 </head>
 <body>
-	<h2>Status: ${msg}
+	<p>Status: ${msg}</p>
+	<p>From ${handscanheader.firstDate}</p>
+	<p>To   ${handscanheader.lastDate}</p>
 	<br>
 	<a href="index">Index Menu</a>
 	<br>
-	<a href="timeclock">Hand Scan Menu</a>
-	</h2>
+	<c:forEach items="${handscanheader.handscanrecords}" var="handscanrecord">
+		<tr>
+			<td>${handscanrecord.recordSeq}</td>
+		</tr>
+	</c:forEach>
 </body>
 </html>

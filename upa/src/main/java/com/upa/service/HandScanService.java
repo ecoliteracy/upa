@@ -13,4 +13,5 @@ public interface HandScanService {
 	public String addHandScanRecordUpdateHeader(HandScanRecord hr, HandScanHeader h);
 	public HandScanHeader getHandScanOfTerm(Date dt, String userId);
 	public HandScanRecord getMatchingHandScanRecord(HandScanHeader hd, String dateComp);
+	public HandScanHeader getHandScanHeaderById(Integer headerSeq);
 }

@@ -45,7 +45,7 @@ public class HandScanHeader extends BaseEntity{
 	Long remainingHour;
 	
 	@OneToMany(cascade=CascadeType.ALL,fetch = FetchType.EAGER, mappedBy = "handScanHeader")
-	List<HandScanRecord> handscanrecords;
+	public List<HandScanRecord> handscanrecords;
 
 	public HandScanHeader(){};
 

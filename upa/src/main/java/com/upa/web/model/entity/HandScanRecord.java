@@ -29,13 +29,13 @@ public class HandScanRecord extends BaseEntity{
 	Integer recordSeq;
 	@Temporal(TemporalType.DATE)
 	@Column(name="SCAN_DATE")
-	Date scanDate;
+	public Date scanDate;
 	@Temporal(TemporalType.TIME)
 	@Column(name="SCAN_IN_TIME")
-	Date scanInTime;
+	public Date scanInTime;
 	@Temporal(TemporalType.TIME)
 	@Column(name="SCAN_OUT_TIME")
-	Date scanOutTime;
+	public Date scanOutTime;
 	@Temporal(TemporalType.TIME)
 	@Column(name="PARTICIPATION_TIME")
 	Date participationTime;

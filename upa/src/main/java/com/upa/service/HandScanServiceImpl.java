@@ -263,9 +263,9 @@ public class HandScanServiceImpl implements HandScanService{
 	public Date getHourInRecord(HandScanRecord hsr){
 		Date diffTime = null;
 		SimpleDateFormat formatterT = new SimpleDateFormat("hh:mm");
-		if(hsr.getScanInDateTime() != null && hsr.getScanOutTime() != null){
+		if(hsr.getScanInTime() != null && hsr.getScanOutTime() != null){
 			try {
-				long diff = hsr.getScanOutTime().getTime() - hsr.getScanInDateTime().getTime();
+				long diff = hsr.getScanOutTime().getTime() - hsr.getScanInTime().getTime();
 				long diffHours = diff/(60*60*1000) %24;
 				long diffMinutes = diff / (60 * 1000) % 60;
 				String diffStr = String.valueOf(diffHours)+":"+String.valueOf(diffMinutes);

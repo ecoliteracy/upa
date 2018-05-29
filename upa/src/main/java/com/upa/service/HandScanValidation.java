@@ -7,8 +7,8 @@ public class HandScanValidation {
 	static HandScanConstant handscanconstant = new HandScanConstant();
 	
 	public String checkInOutTime(HandScanRecord hsr){
-		if(hsr.getScanInDateTime() != null && hsr.getScanOutTime() != null){
-			long diff = hsr.getScanOutTime().getTime() - hsr.getScanInDateTime().getTime();
+		if(hsr.getScanInTime() != null && hsr.getScanOutTime() != null){
+			long diff = hsr.getScanOutTime().getTime() - hsr.getScanInTime().getTime();
 			if(diff < 0){
 				return handscanconstant.INVALID_TIME;
 			}else{

@@ -14,12 +14,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(schema = "upa", name="upa_hand_scan_record")
 public class HandScanRecord extends BaseEntity{
 	
+	@JsonBackReference
 	@JoinColumn(name="HEADER_SEQ", nullable=false)
 	@ManyToOne(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
 	HandScanHeader handScanHeader;
@@ -29,13 +31,13 @@ public class HandScanRecord extends BaseEntity{
 	Integer recordSeq;
 	@Temporal(TemporalType.DATE)
 	@Column(name="SCAN_DATE")
-	public Date scanDate;
+	Date scanDate;
 	@Temporal(TemporalType.TIME)
 	@Column(name="SCAN_IN_TIME")
-	public Date scanInTime;
+	Date scanInTime;
 	@Temporal(TemporalType.TIME)
 	@Column(name="SCAN_OUT_TIME")
-	public Date scanOutTime;
+	Date scanOutTime;
 	@Temporal(TemporalType.TIME)
 	@Column(name="PARTICIPATION_TIME")
 	Date participationTime;
@@ -45,11 +47,12 @@ public class HandScanRecord extends BaseEntity{
 		
 	}
 	
-	public HandScanRecord(Integer id, Date ScanInDateTime, Date scanOutDateTime, Date hour, HandScanHeader handScanHeader){
+	public HandScanRecord(Integer id, Date scanDate, Date ScanInTime, Date scanOutTime, Date participationTime, HandScanHeader handScanHeader){
 		this.recordSeq=id;
-		this.scanInTime=ScanInDateTime;
-		this.scanOutTime=scanOutDateTime;
-		this.participationTime = hour;
+		this.scanDate = scanDate;
+		this.scanInTime=ScanInTime;
+		this.scanOutTime=scanOutTime;
+		this.participationTime = participationTime;
 		this.handScanHeader=handScanHeader;
 	}
 	
@@ -69,27 +72,27 @@ public class HandScanRecord extends BaseEntity{
 		this.scanDate = scanDate;
 	}
 
-	public Date getScanInDateTime() {
+	public Date getScanInTime() {
 		return scanInTime;
 	}
 
-	public void setScanInTime(Date scanInDateTime) {
-		this.scanInTime = scanInDateTime;
+	public void setScanInTime(Date scanInTime) {
+		this.scanInTime = scanInTime;
 	}
 
 	public Date getScanOutTime() {
 		return scanOutTime;
 	}
 
-	public void setScanOutTime(Date scanOutDateTime) {
-		this.scanOutTime = scanOutDateTime;
+	public void setScanOutTime(Date scanOutTime) {
+		this.scanOutTime = scanOutTime;
 	}
 	public Date getParticipationTime() {
 		return participationTime;
 	}
 
-	public void setParticipationTime(Date hour) {
-		this.participationTime = hour;
+	public void setParticipationTime(Date participationTime) {
+		this.participationTime = participationTime;
 	}
 	
 	public HandScanHeader getHandScanHeader() {

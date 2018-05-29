@@ -17,6 +17,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(schema = "upa", name="upa_hand_scan")
 public class HandScanHeader extends BaseEntity{
@@ -44,6 +46,7 @@ public class HandScanHeader extends BaseEntity{
 	@Column(name="REMAINING_HOUR")
 	Long remainingHour;
 	
+	@JsonManagedReference
 	@OneToMany(cascade=CascadeType.ALL,fetch = FetchType.EAGER, mappedBy = "handScanHeader")
 	public List<HandScanRecord> handscanrecords;
 

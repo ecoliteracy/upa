@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.upa.service.HandScanService;
 import com.upa.service.UserService;
 import com.upa.web.config.ApplicationProperties;
@@ -26,8 +28,6 @@ import com.upa.web.model.entity.AppUser;
 import com.upa.web.model.entity.HandScanHeader;
 import com.upa.web.model.entity.HandScanRecord;
 import com.upa.web.model.entity.UserSalaryType;
-
-import antlr.collections.List;
 
 @Controller
 public class HandScanController {
@@ -88,10 +88,14 @@ public class HandScanController {
 		ModelAndView mv  = new ModelAndView(); 		
 		
 		handscanheader = this.handscanservice.getHandScanOfTerm(getCurrentTime(), appuser.getUserId());
+		
+		String handscanrecordsAsJson = createJson(handscanheader);
+		
 		if(handscanheader != null){
 			mv = new ModelAndView("handscan/handScanResult");
 			mv.addObject("handscanheader", this.handscanheader);
 			mv.addObject("msg", "The HandScan has been submitted.");
+			mv.addObject("handscanrecordsAsJson", handscanrecordsAsJson);
 			return mv;		
 			}else{
 			//The result not found for this user
@@ -175,7 +179,7 @@ public class HandScanController {
 				for(HandScanRecord hsr : getHandscanheader().getHandscanrecords()){
 					if(isSameDate(hsr.getScanDate(), timeclocker.getScanDateStr() )){
 						isRecordForTheDayFound = true;
-						if(hsr.getScanInDateTime()!=null && timeclocker.getClockInOut().equals("I") ){
+						if(hsr.getScanInTime()!=null && timeclocker.getClockInOut().equals("I") ){
 							//This is invalid.  It is already checked in.
 							mv.addObject("msg", "Already exists the Clock In for "+ timeclocker.getScanDateStr() );
 							return mv;								
@@ -217,6 +221,22 @@ public class HandScanController {
 			return mv;
 		}
 	}
+		
+	private String createJson(HandScanHeader handscannerheader){		
+		ObjectMapper objectMapper = new ObjectMapper();
+		String handscanAsJson = "";
+		try {
+			handscanAsJson = objectMapper.writeValueAsString(handscannerheader.getHandscanrecords());
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally{
+			System.out.println(handscanAsJson);
+			logger.info(handscanAsJson);
+		}
+		return handscanAsJson;
+	}
+	
 	
 	private HandScanRecord updateHandScanRecordFromUI(TimeClocker tc, HandScanRecord handscanrecord){
 		SimpleDateFormat formatterD = new SimpleDateFormat("MM/dd/yyyy");

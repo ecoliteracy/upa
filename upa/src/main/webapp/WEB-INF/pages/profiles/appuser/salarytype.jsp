@@ -8,7 +8,6 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>App User's Profile</title>
-
 <link rel="stylesheet"	href="https://kendo.cdn.telerik.com/2017.1.223/styles/kendo.common-material.min.css" />
 <link rel="stylesheet"	href="https://kendo.cdn.telerik.com/2017.1.223/styles/kendo.material.min.css" />
 <link rel="stylesheet"	href="https://kendo.cdn.telerik.com/2017.1.223/styles/kendo.material.mobile.min.css" />
@@ -23,11 +22,12 @@
 	<form:form method="POST" modelAttribute="userSalaryType"
 		action="submitUserPayPeriod">
 		<div id="appUserProfile">
-			First Date:
-			<form:input id="firstdatepicker" path="firstDate"></form:input>
-			<br /> Payroll Period:
+			<label for="firstDate" class="required">First Date</label>
+			<form:input type="text" id="firstdatepicker" path="firstDate" name="FirstDate" 
+			class="k-textbox" placeholder="First Date" style="width: 220px;" required="true"></form:input>
+			<br/> Payroll Period:
 			<form:select id="billingperiodselect" name="item"
-				onchange="addDateToLastDate()" path="payPeriodType">
+				onchange="addDateToLastDate()" path="payPeriodType" required="true">
 				<option value="0"></option>
 				<option value="1">Monthly</option>
 				<option value="2">Twice a month</option>
@@ -35,9 +35,12 @@
 				<option value="4">Weekly</option>
 				<option value="5">Daily</option>
 			</form:select>
-			<br/> 
+			<br/>
 			Last Date :
 			<form:input id="lastdatepicker" path="lastDate" readonly="true"></form:input>
+			<br/>
+			Time On Break :
+			<form:input id="timeOnBreak" path="timeOnBreakStr" value="01:00" validationMessage="Enter the Time on Break" required="true"></form:input>
 			<br/>
 			<button id="primaryTextButton" type="submit"
 				value="submitUserPayPeriod">Submit</button>
@@ -45,6 +48,8 @@
 	</form:form>
 </body>
 <script>
+
+
 $(document).ready(function() {
 	// create below from input HTML element
 	$("#billingperiodselect").kendoDropDownList();
@@ -67,19 +72,6 @@ $(document).ready(function() {
 	});
 	
 	$("#firstdatepicker").kendoDatePicker({
-		animation : {
-			close : {
-				effects : "fadeOut zoom:out",
-				duration : 200
-			},
-			open : {
-				effects : "fadeIn zoom:in",
-				duration : 200
-			}
-		}
-	});
-	
-	$("#lastdatepicker").kendoDatePicker({
 		animation : {
 			close : {
 				effects : "fadeOut zoom:out",
@@ -116,6 +108,11 @@ $(document).ready(function() {
 		// display month and year in the input
 		format : "MMMM yyyy"
 	});
+	
+    $('#timeOnBreak').kendoMaskedTextBox({
+        mask:'00:00'
+    });
+
 });
 </script>
 </html>

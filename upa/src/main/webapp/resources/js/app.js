@@ -20,7 +20,6 @@ function addDateToLastDate(){
 		//daiily
 		date = dateformat(date,0,0,1);
 	}
-	date = dateformat(second,0,0,-1);
 	document.getElementById("lastdatepicker").value = date;
 }
 

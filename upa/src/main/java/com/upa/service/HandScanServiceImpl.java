@@ -67,7 +67,6 @@ public class HandScanServiceImpl implements HandScanService{
 			EntityUtils.setupAuditTrail(hr, Boolean.TRUE);			
 		}
 				
-		hr.setParticipationTime(getHourInRecord(hr));
 		if(hr.getParticipationTime()!=null){
 			h.setTotalHour(hr.getParticipationTime().getTime());	
 		}else{
@@ -141,8 +140,7 @@ public class HandScanServiceImpl implements HandScanService{
 			EntityUtils.setupAuditTrail(hr.getHandScanHeader(), Boolean.TRUE);
 		}
 		
-		hr.setParticipationTime(getHourInRecord(hr));
-		
+	
 		//Validation
 		String errorMsg = validation.checkInOutTime(hr);
 		if(errorMsg != null){
@@ -258,24 +256,6 @@ public class HandScanServiceImpl implements HandScanService{
         	String nextFirstDate = format.format(cal.getTime());
         	return createHandScanHeaderObj(inputDate, nextFirstDate);
         }
-	}
-	
-	public Date getHourInRecord(HandScanRecord hsr){
-		Date diffTime = null;
-		SimpleDateFormat formatterT = new SimpleDateFormat("hh:mm");
-		if(hsr.getScanInTime() != null && hsr.getScanOutTime() != null){
-			try {
-				long diff = hsr.getScanOutTime().getTime() - hsr.getScanInTime().getTime();
-				long diffHours = diff/(60*60*1000) %24;
-				long diffMinutes = diff / (60 * 1000) % 60;
-				String diffStr = String.valueOf(diffHours)+":"+String.valueOf(diffMinutes);
-				diffTime = formatterT.parse(diffStr);
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		return diffTime;
 	}
 	
 	public HandScanHeader getHandScanHeaderById(Integer id){

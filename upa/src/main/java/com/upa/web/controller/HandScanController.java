@@ -42,11 +42,12 @@ public class HandScanController {
 	private HandScanHeader handscanheader = new HandScanHeader();
 	private HandScanRecord handscanrecord = new HandScanRecord();
 	private TimeClocker timeClocker = new TimeClocker();
+	private UserSalaryType userSalaryType = new UserSalaryType();
 
 	
 	private AppUser appuserContext;
 
-	private String currentDateStr;
+	//private String currentDateStr;
 	
 	private HandScanService handscanservice;
 	@Autowired(required=true)
@@ -69,7 +70,7 @@ public class HandScanController {
 		logger.trace("HandScanController.getData");
 		ModelAndView model  = new ModelAndView(); 		
 		//User's profile
-		UserSalaryType userSalaryType = this.userservice.getUserSalaryType(appuser.getUserSeq());
+		userSalaryType = this.userservice.getUserSalaryType(appuser.getUserSeq());
 		if(userSalaryType == null){
 			model  = new ModelAndView("profiles/appuser/salarytype");
 			userSalaryType = new UserSalaryType();
@@ -88,10 +89,9 @@ public class HandScanController {
 		ModelAndView mv  = new ModelAndView(); 		
 		
 		handscanheader = this.handscanservice.getHandScanOfTerm(getCurrentTime(), appuser.getUserId());
-		
-		String handscanrecordsAsJson = createJson(handscanheader);
-		
+				
 		if(handscanheader != null){
+			String handscanrecordsAsJson = createJson(handscanheader);
 			mv = new ModelAndView("handscan/handScanResult");
 			mv.addObject("handscanheader", this.handscanheader);
 			mv.addObject("msg", "The HandScan has been submitted.");
@@ -109,7 +109,16 @@ public class HandScanController {
 		logger.trace("HandScanController-submitUserPayPeriod");
 		userSalaryType.setAppUser(appuser);
 		userSalaryType.setTzCode("CDS");
-		userSalaryType.setLastDate(addTimePortion(userSalaryType.getLastDate()));		
+		userSalaryType.setLastDate(addTimePortion(userSalaryType.getLastDate()));
+	    try {
+			SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+			Date breakTime = format.parse(userSalaryType.getTimeOnBreakStr());
+			userSalaryType.setTimeOnBreak(breakTime);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		//Insert the record to the database
 		String status = userservice.addUserSalaryType(userSalaryType);
 		if(status.equals("SUCCESS")){			
@@ -222,7 +231,7 @@ public class HandScanController {
 		}
 	}
 		
-	private String createJson(HandScanHeader handscannerheader){		
+	private String createJson(HandScanHeader handscannerheader){
 		ObjectMapper objectMapper = new ObjectMapper();
 		String handscanAsJson = "";
 		try {
@@ -235,8 +244,8 @@ public class HandScanController {
 			logger.info(handscanAsJson);
 		}
 		return handscanAsJson;
+
 	}
-	
 	
 	private HandScanRecord updateHandScanRecordFromUI(TimeClocker tc, HandScanRecord handscanrecord){
 		SimpleDateFormat formatterD = new SimpleDateFormat("MM/dd/yyyy");
@@ -250,6 +259,9 @@ public class HandScanController {
 			}else if(tc.getClockInOut().equals("O")){
 				handscanrecord.setScanOutTime(formatterT.parse(tc.getScanTimeStr()));
 			}
+			
+			handscanrecord.setParticipationTime(getHourInRecord(handscanrecord,userSalaryType));
+
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -311,19 +323,44 @@ public class HandScanController {
 		
 		return c.getTime();
     }
+    
+	public Date getHourInRecord(HandScanRecord hsr, UserSalaryType userSalaryType){
+		Date diffTime = null;
+		SimpleDateFormat formatterT = new SimpleDateFormat("hh:mm");
+		if(hsr.getScanInTime() != null && hsr.getScanOutTime() != null && userSalaryType.getTimeOnBreak() != null){
+			try {
+				long diff = hsr.getScanOutTime().getTime() - hsr.getScanInTime().getTime() ;
+				long breakHr = userSalaryType.getTimeOnBreak().getHours();
+				long breakMin = userSalaryType.getTimeOnBreak().getMinutes();
+				
+				long diffHours = diff/(60*60*1000) %24;
+				long diffMinutes = diff / (60 * 1000) % 60;
+				
+				diffHours -= breakHr;
+				diffMinutes -= breakMin;
+				
+				String diffStr = String.valueOf(diffHours)+":"+String.valueOf(diffMinutes);
+				diffTime = formatterT.parse(diffStr);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return diffTime;
+	}
 		
 	private Date getCurrentTime(){
 		Date date = new Date();
 		return date;
 	}
 
-	public String getCurrentDateStr() {
-		return currentDateStr;
-	}
-
-	public void setCurrentDateStr(String currentDateStr) {
-		this.currentDateStr = currentDateStr;
-	}
+//	public String getCurrentDateStr() {
+//		return currentDateStr;
+//	}
+//
+//	public void setCurrentDateStr(String currentDateStr) {
+//		this.currentDateStr = currentDateStr;
+//	}
 
 	public HandScanRecord getHandscanrecord() {
 		return handscanrecord;

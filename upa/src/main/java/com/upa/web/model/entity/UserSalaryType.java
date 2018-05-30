@@ -13,6 +13,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 @Entity
 @Table(schema = "upa", name="upa_user_salary_type")
@@ -43,20 +44,27 @@ public class UserSalaryType extends BaseEntity{
 	@Column(name="LAST_DATE")
 	Date lastDate;
 	
-
+	@Temporal(TemporalType.TIME)
+	@Column(name="TIME_ON_BREAK")
+	Date timeOnBreak;
+	
+	@Transient
+	String timeOnBreakStr;
+		
 	@OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_SEQ", nullable = false)
 	AppUser appUser;
 	
 	public UserSalaryType(){};
 	
-	public UserSalaryType(Integer userSeq, Double salAmt,String salCurrCode,Boolean exemptInd, String payPeriodType, Date firstDate, Date lastDate){
+	public UserSalaryType(Integer userSeq, Double salAmt,String salCurrCode,Boolean exemptInd, String payPeriodType, Date firstDate, Date lastDate, Date timeOnBreak){
 		this.userSalTypeSeq = userSeq;
 		this.salAmt = salAmt;
 		this.exemptInd = exemptInd;
 		this.payPeriodType = payPeriodType;
 		this.firstDate = firstDate;
 		this.lastDate = lastDate;
+		this.timeOnBreak = timeOnBreak;
 	}
 	
 	public Integer getUserSeq() {
@@ -115,6 +123,13 @@ public class UserSalaryType extends BaseEntity{
 		this.lastDate = lastDate;
 	}
 	
+	public Date getTimeOnBreak() {
+		return timeOnBreak;
+	}
+
+	public void setTimeOnBreak(Date timeOnBreak) {
+		this.timeOnBreak = timeOnBreak;
+	}	
 	
 	public AppUser getAppUser() {
 		return appUser;
@@ -122,5 +137,13 @@ public class UserSalaryType extends BaseEntity{
 
 	public void setAppUser(AppUser appUser) {
 		this.appUser = appUser;
+	}
+
+	public String getTimeOnBreakStr() {
+		return timeOnBreakStr;
+	}
+
+	public void setTimeOnBreakStr(String timeOnBreakStr) {
+		this.timeOnBreakStr = timeOnBreakStr;
 	}
 }

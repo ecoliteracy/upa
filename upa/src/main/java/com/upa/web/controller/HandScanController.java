@@ -142,6 +142,7 @@ public class HandScanController {
 			handscanheader.setFirstDate(userSalaryType.getFirstDate());
 			handscanheader.setLastDate(userSalaryType.getLastDate());
 			handscanheader.setAppuser(appuser);
+			handscanheader.setWorkingHourInMin(calcWorkingHourInMin(handscanheader.getFirstDate(), handscanheader.getLastDate(),0)); 
 			handscanheader = adjustDateRange(handscanheader,getCurrentTime(),userSalaryType.getPayPeriodType());
 		}
 		
@@ -295,6 +296,28 @@ public class HandScanController {
     	}
     }
     
+    private Integer calcWorkingHourInMin(Date firstDay, Date lastDay, Integer workingHourInMin){
+    	if(firstDay != null && lastDay != null){
+        	if(firstDay.getDate() == lastDay.getDate()){
+        		return workingHourInMin;
+        	}else{    		
+        		if(firstDay.getDay() != 0 && firstDay.getDay() != 6){
+        			workingHourInMin += 480;
+        		}    		
+    	        Calendar cal = Calendar.getInstance();
+    	        cal.setTime(firstDay);
+    	        cal.add(Calendar.DATE, 1); 
+    			firstDay = cal.getTime();
+        		return calcWorkingHourInMin(firstDay,lastDay,workingHourInMin);
+        	}
+    	}else{
+    		return 0;
+    	}
+    	
+    	
+
+    }
+        
     private Date incrementDate(Date date, String payPeriodType){
   		Calendar c = Calendar.getInstance();
 		c.setTime(date);

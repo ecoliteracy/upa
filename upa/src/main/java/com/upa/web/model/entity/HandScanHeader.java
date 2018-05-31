@@ -40,11 +40,14 @@ public class HandScanHeader extends BaseEntity{
 	@Column(name="LAST_DATE")
 	Date lastDate;
 	
-	@Column(name="TOTAL_HOUR")
-	Long totalHour;
+	@Column(name="TOTAL_PRTCP_IN_MIN")
+	Integer totalParticipationInMin;
 	
-	@Column(name="REMAINING_HOUR")
-	Long remainingHour;
+ 	@Column(name="REM_HOUR_IN_MIN")
+ 	Integer remainingHourInMin;
+ 	
+ 	@Column(name="WORKING_HOUR_IN_MIN")
+ 	Integer workingHourInMin;
 	
 	@JsonManagedReference
 	@OneToMany(cascade=CascadeType.ALL,fetch = FetchType.EAGER, mappedBy = "handScanHeader")
@@ -52,12 +55,12 @@ public class HandScanHeader extends BaseEntity{
 
 	public HandScanHeader(){};
 
-	public HandScanHeader(Integer id, Date firstDate, Date lastDate, Long totalHour, Long remainingHour, List<HandScanRecord> handscanrecords){
+	public HandScanHeader(Integer id, Date firstDate, Date lastDate, Integer totalParticipationInMin, Integer remainingHourInMin, List<HandScanRecord> handscanrecords){
 		this.headerSeq=id;
 		this.firstDate = firstDate;
 		this.lastDate = lastDate;
-		this.totalHour = totalHour;
-		this.remainingHour = remainingHour;
+		this.totalParticipationInMin = totalParticipationInMin;
+		this.remainingHourInMin = remainingHourInMin;
 		this.handscanrecords = handscanrecords;
 	}
 	
@@ -85,20 +88,28 @@ public class HandScanHeader extends BaseEntity{
 		this.lastDate = lastDate;
 	}
 
-	public long getTotalHour() {
-		return totalHour;
+	public Integer getTotalHour() {
+		return totalParticipationInMin;
 	}
 
-	public void setTotalHour(Long totalHour) {
-		this.totalHour = totalHour;
+	public void setTotalHour(Integer totalHourInMin) {
+		this.totalParticipationInMin = totalHourInMin;
 	}
 
-	public long getRemainingHour() {
-		return remainingHour;
+	public Integer getRemainingHour() {
+		return remainingHourInMin;
 	}
 
-	public void setRemainingHour(Long remainingHour) {
-		this.remainingHour = remainingHour;
+	public void setRemainingHour(Integer remainingHourInMin) {
+		this.remainingHourInMin = remainingHourInMin;
+	}
+	
+	public Integer getWorkingHourInMin() {
+		return workingHourInMin;
+	}
+
+	public void setWorkingHourInMin(Integer workingHourInMin) {
+		this.workingHourInMin = workingHourInMin;
 	}
 
 	public AppUser getAppuser() {
@@ -116,6 +127,4 @@ public class HandScanHeader extends BaseEntity{
 	public void setHandscanrecords(List<HandScanRecord> handscanrecords) {
 		this.handscanrecords = handscanrecords;
 	}
-
-
 }

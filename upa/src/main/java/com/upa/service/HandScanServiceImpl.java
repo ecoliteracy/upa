@@ -66,19 +66,9 @@ public class HandScanServiceImpl implements HandScanService{
 			//insert case
 			EntityUtils.setupAuditTrail(hr, Boolean.TRUE);			
 		}
-				
-		if(hr.getParticipationTime()!=null){
-			h.setTotalHour(hr.getParticipationTime().getTime());	
-		}else{
-			h.setTotalHour(0L);
-		}
 		
-		long timeTermGoal = getHourMin(handscanConstant.TERM_GOAL+":00");
-		if(hr.getParticipationTime()!=null){
-			h.setRemainingHour(getSubtrHrMin( timeTermGoal, hr.getParticipationTime().getTime()));
-		}else{
-			h.setRemainingHour(0L);
-		}
+		h.setTotalHour(getSumOfParticipation(h.getHandscanrecords()));
+		h.setRemainingHour(subtrMinsFromMins(h.getWorkingHourInMin(), h.getTotalHour()));			
 		hr.setHandScanHeader(h);
 		
 //		handscandao.saveHandscanHeader(h);
@@ -89,31 +79,21 @@ public class HandScanServiceImpl implements HandScanService{
 		return null;
 	}
 	
-	private long getHourMin(String hourMinStr){
-		SimpleDateFormat formatterT = new SimpleDateFormat("hh:mm");
-		Date hrMin = null;
-		try{
-			hrMin = formatterT.parse(hourMinStr);
-		}catch(ParseException e){
-			e.printStackTrace();
-		}
-		return hrMin.getTime();
+
+	private Date dateHrMinLongToDate(long a){
+		Date time = new Date();
+		int timeInMilliSecond = 0;
+		int th = timeInMilliSecond / (60 * 60 * 1000);
+		int tm = timeInMilliSecond / (60 * 1000) % 60;
+		time.setHours(th);;
+		time.setMinutes(tm);
+		return time;
 	}
 	
-	private long dateHrMinConvertToLong(Date a){
-		return a.getTime();
-	}
 	
-	private long getSubtrHrMin(long hm1, long hm2){
-		if(hm1==0L || hm2==0L)
-			return 0L;
-		long diff = hm1 - hm2;
-		long diffHours = diff/(60*60*1000);//%24;
-		long diffMinutes = diff / (60 * 1000) % 60;
-				
-		return diffHours + diffMinutes;
+	private Integer subtrMinsFromMins(Integer min1, Integer min2){
+		return min1 - min2;
 	}
-	
 	
 	@Transactional
 	public String addHandScanRecordUpdateHeader(HandScanRecord hr, HandScanHeader h){
@@ -138,8 +118,7 @@ public class HandScanServiceImpl implements HandScanService{
 			EntityUtils.setupAuditTrail(hr.getHandScanHeader(), Boolean.FALSE);
 		}else{
 			EntityUtils.setupAuditTrail(hr.getHandScanHeader(), Boolean.TRUE);
-		}
-		
+		}		
 	
 		//Validation
 		String errorMsg = validation.checkInOutTime(hr);
@@ -164,34 +143,16 @@ public class HandScanServiceImpl implements HandScanService{
 		HandScanHeader h = handscandao.getHandScanOfTerm(dt, userId);
 		if(h != null && h.getHandscanrecords() != null && h.getHandscanrecords().size() > 0){
 			h.setTotalHour(getSumOfParticipation(h.getHandscanrecords()));
-			h.setRemainingHour(getSubtrHrMin(getHourMin(handscanConstant.TERM_GOAL+":00"), h.getTotalHour()));
+			h.setRemainingHour(subtrMinsFromMins(h.getWorkingHourInMin(), h.getTotalHour()));			
+
 		}
 		return h;
 	}
 	
 	private void saveHeaderInfo(HandScanRecord hr, HandScanHeader h) {
 		List<Date> times = handscandao.getParticipateTime(h.getHeaderSeq());
-		long totalHr = 0L; 
-		long hT = 0L;
-		if(times != null && times.size() > 0){
-			for(Date t: times){
-				hT = t.getTime() + hT;
-			}
-			long th = hT / (60*60*1000) %24;
-			long tm = hT / (60 * 1000) % 60;
-			String timeStr = String.valueOf(th)+":"+String.valueOf(tm);
-			
-			totalHr = th + tm;
-		}else{
-			if(hr.getParticipationTime() != null){
-				totalHr  = hr.getParticipationTime().getTime();
-			}else{
-				return;
-			}
-		}
-
-		h.setTotalHour(totalHr);
-		h.setRemainingHour(getSubtrHrMin(getHourMin(handscanConstant.TERM_GOAL+":00"), h.getTotalHour()));
+		h.setTotalHour(getSumOfParticipation(h.getHandscanrecords()));
+		h.setRemainingHour(subtrMinsFromMins( h.getWorkingHourInMin(), h.getTotalHour()));			
 		handscandao.saveHandscanHeader(h);
 	}
 
@@ -220,11 +181,30 @@ public class HandScanServiceImpl implements HandScanService{
 		return new HandScanRecord();
 	}
 	
-	private long getSumOfParticipation(List<HandScanRecord> hsr){
+	
+	private Integer getSumOfParticipation(List<HandScanRecord> hsr){
+		int hourPortion = 0;
+		int minPortion = 0;		
+ 		if(hsr!= null && hsr.size() > 0){
+			for(HandScanRecord r: hsr){
+				if(r.getParticipationTime() != null){					
+					hourPortion += r.getParticipationTime().getHours();
+					minPortion += r.getParticipationTime().getMinutes();
+				}
+			}			
+			hourPortion = hourPortion * 60;
+			return minPortion + hourPortion ;	
+ 		}
+ 		return null;
+	}
+	
+	private long getSumOfParticipationNotUsed(List<HandScanRecord> hsr){
 		long time = 0L;
 		if(hsr!= null && hsr.size() > 0){
 			for(HandScanRecord r: hsr){
 				if(r.getParticipationTime() != null){
+					
+					
 					long t = r.getParticipationTime().getTime() + time;
 				}
 			}

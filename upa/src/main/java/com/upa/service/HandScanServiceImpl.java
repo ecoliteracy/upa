@@ -150,7 +150,6 @@ public class HandScanServiceImpl implements HandScanService{
 	}
 	
 	private void saveHeaderInfo(HandScanRecord hr, HandScanHeader h) {
-		List<Date> times = handscandao.getParticipateTime(h.getHeaderSeq());
 		h.setTotalHour(getSumOfParticipation(h.getHandscanrecords()));
 		h.setRemainingHour(subtrMinsFromMins( h.getWorkingHourInMin(), h.getTotalHour()));			
 		handscandao.saveHandscanHeader(h);

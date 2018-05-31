@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.upa.service.HandScanService;
@@ -91,12 +92,7 @@ public class HandScanController {
 		handscanheader = this.handscanservice.getHandScanOfTerm(getCurrentTime(), appuser.getUserId());
 				
 		if(handscanheader != null){
-			String handscanrecordsAsJson = createJson(handscanheader);
-			mv = new ModelAndView("handscan/handScanResult");
-			mv.addObject("handscanheader", this.handscanheader);
-			mv.addObject("msg", "The HandScan has been submitted.");
-			mv.addObject("handscanrecordsAsJson", handscanrecordsAsJson);
-			return mv;		
+ 			return forwardResultScreen(mv);
 			}else{
 			//The result not found for this user
 			return null;
@@ -156,6 +152,16 @@ public class HandScanController {
 		timeClocker.setFirstDate(handscanheader.getFirstDate());
 		timeClocker.setLastDate(handscanheader.getLastDate());
 		
+		try {
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(timeClocker.getFirstDate());
+ 			ObjectMapper mapper = new ObjectMapper(); 			
+ 			model.addObject("mappedFirstDate",mapper.writeValueAsString(cal.get(Calendar.YEAR)+"|"+cal.get(Calendar.MONTH)+"|" +cal.get(Calendar.DATE)));
+ 			cal.setTime(timeClocker.getLastDate());
+ 			model.addObject("mappedLastDate",mapper.writeValueAsString(cal.get(Calendar.YEAR)+"|"+cal.get(Calendar.MONTH)+"|" +cal.get(Calendar.DATE)));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}					
 		model.addObject("timeclocker", timeClocker);
 		model.addObject("handScanRecord", new HandScanRecord());		
 		
@@ -220,16 +226,21 @@ public class HandScanController {
 		status = this.handscanservice.addHandScan(handscanrecord, getHandscanheader());
 
 		if(status==null){
-
 			handscanheader = handscanservice.getHandScanHeaderById(handscanheader.getHeaderSeq());
-			mv = new ModelAndView("handscan/handScanResult");
-			mv.addObject("handscanheader", this.handscanheader);
 			mv.addObject("msg", "The HandScan has been submitted.");
-			return mv;
+ 			return forwardResultScreen(mv);
 		}else{
 			mv.addObject("msg", status);
 			return mv;
 		}
+	}
+	
+	private ModelAndView forwardResultScreen(ModelAndView mv){
+		String handscanrecordsAsJson = createJson(handscanheader);
+		mv = new ModelAndView("handscan/handScanResult");
+		mv.addObject("handscanheader", this.handscanheader);
+		mv.addObject("handscanrecordsAsJson", handscanrecordsAsJson);
+		return mv;		
 	}
 		
 	private String createJson(HandScanHeader handscannerheader){
@@ -376,14 +387,6 @@ public class HandScanController {
 		Date date = new Date();
 		return date;
 	}
-
-//	public String getCurrentDateStr() {
-//		return currentDateStr;
-//	}
-//
-//	public void setCurrentDateStr(String currentDateStr) {
-//		this.currentDateStr = currentDateStr;
-//	}
 
 	public HandScanRecord getHandscanrecord() {
 		return handscanrecord;

@@ -51,7 +51,10 @@ html {
 								}
 							}
 						},
-						pageSize : 20
+						pageSize : 20, 
+						  serverSorting: true,
+						  sort: { scanDate: "age", dir: "desc" }
+
 					},
 					height : 550,
 					scrollable : true,
@@ -62,9 +65,9 @@ html {
 						numeric : false
 					},
 					columns : [ {field : "recordSeq",title : "No",width : "60px"},
-					            {field : "scanDate", title : "Scan Date", format: "{0:MM/dd/yyyy}"},
-					            {field : "scanInTime", title : "Scan In", format:"{0:HH:mm}"},
-					            {field : "scanOutTime", title : "Scan Out",format:"{0:HH:mm}"}]
+					            {field : "scanDate", title : "Scan Date", format: "{0:MM/dd/yyyy}", width : "100px"},
+					            {field : "scanInTime", title : "Scan In", format:"{0:HH:mm}" , width : "100px"},
+					            {field : "scanOutTime", title : "Scan Out",format:"{0:HH:mm}", width : "100px"}]
 				});
 
 			});

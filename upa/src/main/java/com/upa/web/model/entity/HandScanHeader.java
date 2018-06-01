@@ -88,12 +88,12 @@ public class HandScanHeader extends BaseEntity{
 		this.lastDate = lastDate;
 	}
 
-	public Integer getTotalHour() {
+	public Integer getTotalParticipationInMin() {
 		return totalParticipationInMin;
 	}
 
-	public void setTotalHour(Integer totalHourInMin) {
-		this.totalParticipationInMin = totalHourInMin;
+	public void setTotalParticipationInMin(Integer totalParticipationInMin) {
+		this.totalParticipationInMin = totalParticipationInMin;
 	}
 
 	public Integer getRemainingHour() {

@@ -18,8 +18,10 @@
 <script type="text/javascript" src="resources/js/app.js"></script>
 </head>
 <body>
+	<a href="index">Go Back to Index Menu</a>
+
 	<form:form method="POST" modelAttribute="timeclocker" action="submit">
-    <p>Time Clocker for ${appuser.userId}</p>
+	<p>Time Clocker for ${appuser.userId}</p>
 	<p>From   ${timeclocker.firstDate}</p>
 	<p>To     ${timeclocker.lastDate}</p>
 	<div id="timeclockerApp">

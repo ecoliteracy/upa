@@ -83,6 +83,20 @@ public class HandScanController {
 		}
 	}
 	
+	@RequestMapping(value="/index")
+	public ModelAndView backToIndex(@SessionAttribute("appuser") AppUser appuser){
+		//forwards to timeclock.jsp at WEB-INF/pages/handscan/timeclock.jsp
+		logger.trace("HandScanController.backToIndex");
+		ModelAndView model  = new ModelAndView("index"); 	
+		model.addObject("appuser", appuser);
+		return model;
+ 	}
+	
+	@RequestMapping(value="/cancelTimeClock")
+	public ModelAndView cancelTimeClock(@SessionAttribute("appuser") AppUser appuser, @ModelAttribute TimeClocker timeclocker){
+		return backToIndex(appuser);
+	}
+	
 	@RequestMapping(value="/timeclockrecord")
 	public ModelAndView forwardToRecord(@SessionAttribute("appuser") AppUser appuser){
 		//forwards to timeclock.jsp at WEB-INF/pages/handscan/timeclock.jsp

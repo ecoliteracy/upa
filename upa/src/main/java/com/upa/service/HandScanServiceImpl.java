@@ -67,8 +67,8 @@ public class HandScanServiceImpl implements HandScanService{
 			EntityUtils.setupAuditTrail(hr, Boolean.TRUE);			
 		}
 		
-		h.setTotalHour(getSumOfParticipation(h.getHandscanrecords()));
-		h.setRemainingHour(subtrMinsFromMins(h.getWorkingHourInMin(), h.getTotalHour()));			
+		h.setTotalParticipationInMin(getSumOfParticipation(h.getHandscanrecords()));
+		h.setRemainingHour(subtrMinsFromMins(h.getWorkingHourInMin(), h.getTotalParticipationInMin()));			
 		hr.setHandScanHeader(h);
 		
 //		handscandao.saveHandscanHeader(h);
@@ -142,16 +142,16 @@ public class HandScanServiceImpl implements HandScanService{
 	public HandScanHeader getHandScanOfTerm(Date dt, String userId) {
 		HandScanHeader h = handscandao.getHandScanOfTerm(dt, userId);
 		if(h != null && h.getHandscanrecords() != null && h.getHandscanrecords().size() > 0){
-			h.setTotalHour(getSumOfParticipation(h.getHandscanrecords()));
-			h.setRemainingHour(subtrMinsFromMins(h.getWorkingHourInMin(), h.getTotalHour()));			
+			h.setTotalParticipationInMin(getSumOfParticipation(h.getHandscanrecords()));
+			h.setRemainingHour(subtrMinsFromMins(h.getWorkingHourInMin(), h.getTotalParticipationInMin()));			
 
 		}
 		return h;
 	}
 	
 	private void saveHeaderInfo(HandScanRecord hr, HandScanHeader h) {
-		h.setTotalHour(getSumOfParticipation(h.getHandscanrecords()));
-		h.setRemainingHour(subtrMinsFromMins( h.getWorkingHourInMin(), h.getTotalHour()));			
+		h.setTotalParticipationInMin(getSumOfParticipation(h.getHandscanrecords()));
+		h.setRemainingHour(subtrMinsFromMins( h.getWorkingHourInMin(), h.getTotalParticipationInMin()));			
 		handscandao.saveHandscanHeader(h);
 	}
 
@@ -213,7 +213,7 @@ public class HandScanServiceImpl implements HandScanService{
 		return th + tm;
 	}
 	
-	public HandScanHeader createHandScanHeaderObj(Date inputDate, String FIRST_DATE) throws ParseException{
+	private HandScanHeader createHandScanHeaderObj(Date inputDate, String FIRST_DATE) throws ParseException{
 		HandScanHeader h = new HandScanHeader();
 		DateFormat format = new SimpleDateFormat("yyyy/MM/dd");
 		Date firstDate = format.parse(FIRST_DATE);

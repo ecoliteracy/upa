@@ -18,60 +18,56 @@ html {
 </head>
 <body>
 
-	<p>Status: ${msg}</p>
-	<p>From ${handscanheader.firstDate}</p>
-	<p>To ${handscanheader.lastDate}</p>
-	<br>
-	<a href="index">Index Menu</a>
-	<br>
-	<c:forEach items="${handscanheader.handscanrecords}"
-		var="handscanrecord">
-		<tr>
-			<td>${handscanrecord.recordSeq}</td>
-		</tr>
-	</c:forEach>
-	
-	<div id="example">
+	<a href="index">Go Back to Index Menu</a>
+
+	<ul class="fieldlist">
+		<li><label class="k-label">From </label> <input class="k-label"
+			value="${handscanheader.firstDate}" readonly disabled /></li>
+		<li><label class="k-label">To </label> <input class="k-label"
+			value="${handscanheader.lastDate}" readonly disabled /></li>
+		<li><label class="k-label">Total Hours </label> <input
+			class="k-label" value="${handscanheader.totalParticipationInMin}"
+			readonly disabled /></li>
+	</ul>
 	<div id="grid"></div>
+	<script>
+	$(document).ready(function() {
+		var handscans = ${handscanrecordsAsJson};	
+		$("#grid").kendoGrid({
+			dataSource : {
+				data : handscans,
+				schema : {
+					model : {
+						fields : {
+							recordSeq   : { type : "number"},
+							scanDate: { type: "date", parse: function(value) { return new Date(value); }},
+							scanInTime  : { type : "date" },
+							scanOutTime : { type : "date" },
+							participationTime : {type : "date"}
+						}
+					}
+				},
+				pageSize : 20, 
+				  serverSorting: true,
+				  sort: { scanDate: "age", dir: "desc" }
 	
-<script>
-			$(document).ready(function() {
-				var handscans = ${handscanrecordsAsJson};
-
-				$("#grid").kendoGrid({
-					dataSource : {
-						data : handscans,
-						schema : {
-							model : {
-								fields : {
-									recordSeq   : { type : "number"},
-									scanDate: { type: "date", parse: function(value) { return new Date(value); }},
-									scanInTime  : { type : "date" },
-									scanOutTime : { type : "date" }
-								}
-							}
-						},
-						pageSize : 20, 
-						  serverSorting: true,
-						  sort: { scanDate: "age", dir: "desc" }
-
-					},
-					height : 550,
-					scrollable : true,
-					sortable : true,
-					filterable : true,
-					pageable : {
-						input : true,
-						numeric : false
-					},
-					columns : [ {field : "recordSeq",title : "No",width : "60px"},
-					            {field : "scanDate", title : "Scan Date", format: "{0:MM/dd/yyyy}", width : "100px"},
-					            {field : "scanInTime", title : "Scan In", format:"{0:HH:mm}" , width : "100px"},
-					            {field : "scanOutTime", title : "Scan Out",format:"{0:HH:mm}", width : "100px"}]
-				});
-
-			});
-		</script>
-		</div>
+			},
+			height : 550,
+			scrollable : true,
+			sortable : true,
+			filterable : true,
+			pageable : {
+				input : true,
+				numeric : false
+			},
+			columns : [ {field : "recordSeq",title : "No",width : "60px"},
+			            {field : "scanDate", title : "Scan Date", format: "{0:MM/dd/yyyy}", width : "100px"},
+			            {field : "scanInTime", title : "Scan In", format:"{0:HH:mm}" , width : "100px"},
+			            {field : "scanOutTime", title : "Scan Out",format:"{0:HH:mm}", width : "100px"},
+			            {field : "participationTime", title : "Hours",format:"{0:HH:mm}", width : "80px"}]
+		});
+	
+	});
+</script>
 </body>
 </html>

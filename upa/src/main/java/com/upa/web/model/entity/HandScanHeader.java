@@ -17,6 +17,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.OrderBy;
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -50,6 +52,7 @@ public class HandScanHeader extends BaseEntity{
  	Integer workingHourInMin;
 	
 	@JsonManagedReference
+    @OrderBy(clause = "scanDate")
 	@OneToMany(cascade=CascadeType.ALL,fetch = FetchType.EAGER, mappedBy = "handScanHeader")
 	public List<HandScanRecord> handscanrecords;
 

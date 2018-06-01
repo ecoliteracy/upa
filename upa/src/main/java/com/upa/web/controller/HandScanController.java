@@ -101,18 +101,15 @@ public class HandScanController {
 	public ModelAndView forwardToRecord(@SessionAttribute("appuser") AppUser appuser){
 		//forwards to timeclock.jsp at WEB-INF/pages/handscan/timeclock.jsp
 		logger.trace("HandScanController-forwardToRecord");
-		ModelAndView mv  = new ModelAndView(); 		
-		
-		handscanheader = this.handscanservice.getHandScanOfTerm(getCurrentTime(), appuser.getUserId());
-				
+		ModelAndView mv  = new ModelAndView();		
+		handscanheader = this.handscanservice.getHandScanOfTerm(getCurrentTime(), appuser.getUserId());				
 		if(handscanheader != null){
  			return forwardResultScreen(mv);
 			}else{
 			//The result not found for this user
-			return null;
+			return backToIndex(appuser);
 		}
-	}
-	
+	}	
 	
 	@RequestMapping("/submitUserPayPeriod")
 	public ModelAndView submitUserPayPeriod(@SessionAttribute("appuser") AppUser appuser, @ModelAttribute UserSalaryType userSalaryType){
@@ -240,6 +237,9 @@ public class HandScanController {
 		status = this.handscanservice.addHandScan(handscanrecord, getHandscanheader());
 
 		if(status==null){
+			if(handscanheader == null || ( handscanheader != null && handscanheader.getHeaderSeq() == null) ){
+				handscanheader = this.handscanservice.getHandScanOfTerm(getCurrentTime(), appuser.getUserId());
+			}
 			handscanheader = handscanservice.getHandScanHeaderById(handscanheader.getHeaderSeq());
 			mv.addObject("msg", "The HandScan has been submitted.");
  			return forwardResultScreen(mv);

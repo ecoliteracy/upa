@@ -26,14 +26,25 @@ html {
 		<li><label class="k-label">To </label> <input class="k-label"
 			value="${handscanheader.lastDate}" readonly disabled /></li>
 		<li><label class="k-label">Total Hours </label> <input
+			id="totalparticipation"
 			class="k-label" value="${handscanheader.totalParticipationInMin}"
-			readonly disabled /></li>
+			readonly disabled /></li>			
 	</ul>
 	<div id="grid"></div>
 	<script>
 	$(document).ready(function() {
+		
+		var value = $("#totalparticipation").val();
+	    var realmin = value % 60
+	    var hours = Math.floor(value / 60)
+		$("#totalparticipation").val(hours+" HOURS "+realmin+" MIN");
+		
 		var handscans = ${handscanrecordsAsJson};	
 		$("#grid").kendoGrid({
+			columns : [ {field : "scanDate", title : "Scan Date", format: "{0:MM/dd/yyyy}", width: "100px"},
+			            {field : "scanInTime", title : "Scan In", format:"{0:HH:mm}" , width: "100px"},
+			            {field : "scanOutTime", title : "Scan Out",format:"{0:HH:mm}", width: "100px"},
+			            {field : "participationTime", title : "Hours",format:"{0:HH:mm}", width: "100px"}],
 			dataSource : {
 				data : handscans,
 				schema : {
@@ -46,25 +57,16 @@ html {
 							participationTime : {type : "date"}
 						}
 					}
-				},
-				pageSize : 20, 
-				  serverSorting: true,
-				  sort: { scanDate: "age", dir: "desc" }
-	
+				}
 			},
-			height : 550,
+			height : 400,
 			scrollable : true,
 			sortable : true,
 			filterable : true,
 			pageable : {
-				input : true,
-				numeric : false
-			},
-			columns : [ {field : "recordSeq",title : "No",width : "60px"},
-			            {field : "scanDate", title : "Scan Date", format: "{0:MM/dd/yyyy}", width : "100px"},
-			            {field : "scanInTime", title : "Scan In", format:"{0:HH:mm}" , width : "100px"},
-			            {field : "scanOutTime", title : "Scan Out",format:"{0:HH:mm}", width : "100px"},
-			            {field : "participationTime", title : "Hours",format:"{0:HH:mm}", width : "80px"}]
+				input : false,
+				numeric : true
+			}
 		});
 	
 	});

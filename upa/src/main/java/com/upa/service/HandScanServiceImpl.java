@@ -67,7 +67,7 @@ public class HandScanServiceImpl implements HandScanService{
 			EntityUtils.setupAuditTrail(hr, Boolean.TRUE);			
 		}
 		
-		h.setTotalParticipationInMin(getSumOfParticipation(h.getHandscanrecords()));
+		//h.setTotalParticipationInMin(getSumOfParticipation(h.getHandscanrecords()));
 		h.setRemainingHour(subtrMinsFromMins(h.getWorkingHourInMin(), h.getTotalParticipationInMin()));			
 		hr.setHandScanHeader(h);
 		
@@ -92,7 +92,16 @@ public class HandScanServiceImpl implements HandScanService{
 	
 	
 	private Integer subtrMinsFromMins(Integer min1, Integer min2){
-		return min1 - min2;
+		if(min1 != null && min2 != null){
+			if(min1-min2<=0){
+				return 0;
+			}else{
+				return min1 - min2;	
+			}	
+		}else{
+			return 0;
+		}
+		
 	}
 	
 	@Transactional
@@ -141,7 +150,7 @@ public class HandScanServiceImpl implements HandScanService{
 
 	public HandScanHeader getHandScanOfTerm(Date dt, String userId) {
 		HandScanHeader h = handscandao.getHandScanOfTerm(dt, userId);
-		if(h != null && h.getHandscanrecords() != null && h.getHandscanrecords().size() > 0){
+		if(h != null && h.getHandscanrecords() != null && h.getHandscanrecords().size() > 0){			
 			h.setTotalParticipationInMin(getSumOfParticipation(h.getHandscanrecords()));
 			h.setRemainingHour(subtrMinsFromMins(h.getWorkingHourInMin(), h.getTotalParticipationInMin()));			
 

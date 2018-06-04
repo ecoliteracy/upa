@@ -15,6 +15,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(schema = "upa", name="upa_user_salary_type")
 public class UserSalaryType extends BaseEntity{	
@@ -50,7 +53,8 @@ public class UserSalaryType extends BaseEntity{
 	
 	@Transient
 	String timeOnBreakStr;
-		
+	
+		@JsonBackReference
 	@OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_SEQ", nullable = false)
 	AppUser appUser;

@@ -132,6 +132,7 @@ public class UserDao {
 //		      }
 			session.getTransaction().rollback();
 			e.printStackTrace();
+			return "FAILED";
 		}finally {
 			if (session != null) {
 				session.close();

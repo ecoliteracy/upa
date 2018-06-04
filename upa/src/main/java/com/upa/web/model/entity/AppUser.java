@@ -15,6 +15,9 @@ import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(schema = "upa", name="app_user")
 public class AppUser extends BaseEntity{
@@ -32,6 +35,7 @@ public class AppUser extends BaseEntity{
 	@JoinColumn(name="ORG_SP_ID", nullable=true)
 	@ManyToOne(cascade=CascadeType.PERSIST, fetch = FetchType.LAZY)
 	OrgSalaryPattern orgSalaryPattern;
+	@JsonManagedReference
 	@OneToOne(cascade=CascadeType.PERSIST, fetch=FetchType.EAGER)
 	@PrimaryKeyJoinColumn
 	UserSalaryType userSalaryType;

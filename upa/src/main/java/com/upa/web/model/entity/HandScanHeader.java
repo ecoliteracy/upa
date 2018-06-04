@@ -30,6 +30,7 @@ public class HandScanHeader extends BaseEntity{
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	Integer headerSeq;
 	
+	@JsonManagedReference
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="USER_SEQ", nullable=false)
 	AppUser appuser;

@@ -20,6 +20,10 @@ CREATE TABLE upa.upa_organization (
   PRIMARY KEY (ORG_SEQ) USING BTREE
 )
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+insert into upa.upa_organization (ORG_SEQ,ORG_TYPE,ORG_NAME,TZ_CODE,CREATED_DATE,LAST_MODIFIED_DATE)
+values(1,'E', 'KINTETSU GLOBAL I.T. inc.', 'CST', sysdate(), sysdate() );
+
   
 CREATE TABLE upa.upa_org_salary_pattern (
   ORG_SP_SEQ INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -34,6 +38,10 @@ CREATE TABLE upa.upa_org_salary_pattern (
   FOREIGN KEY (ORG_SEQ) REFERENCES upa.upa_organization(ORG_SEQ)
   )
   ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+insert into upa.upa_org_salary_pattern ( ORG_SP_SEQ,ORG_SEQ,FIRST_DATE,LAST_DATE,TZ_CODE,CREATED_DATE,LAST_MODIFIED_DATE )
+values(1,1,'2019-2-24','2019-3-10','CST',sysdate(),sysdate());
+
 
 /*
 app_user
@@ -138,4 +146,4 @@ insert into upa.upa_alert_message (MESSAGE_SEQ,  MESSAGE_CODE,  MESSAGE_TYPE,  L
 values(1,'DUP', 'ERR',  'EN', 'The entered value is already existed.', 'US3', sysdate(),  sysdate());
 commit;
 
-
+SELECT * FROM upa.upa_hand_scan;

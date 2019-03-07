@@ -47,8 +47,8 @@ public class TimeClockController {
 	{
 		//http://localhost:8080/mitta-webapp/timeclockws
 		AppUser appuser = new AppUser();
-		appuser.setUserId("KIWASAKI");
-		appuser.setUserPassword("welcome1");
+		/*appuser.setUserId("KIWASAKI");
+		appuser.setUserPassword("welcome1");*/
 	
 		UserValidationResult rs = this.userservice.isValidUserPassword(appuser);
 		appuser = rs.getAppuser();
@@ -64,8 +64,8 @@ public class TimeClockController {
 	{
 		//http://localhost:8080/mitta-webapp/gethsrec
 		AppUser appuser = new AppUser();
-		appuser.setUserId("KIWASAKI");
-		appuser.setUserPassword("welcome1");
+		/*appuser.setUserId("KIWASAKI");
+		appuser.setUserPassword("welcome1");*/
 	
 		UserValidationResult rs = this.userservice.isValidUserPassword(appuser);
 		appuser = rs.getAppuser();

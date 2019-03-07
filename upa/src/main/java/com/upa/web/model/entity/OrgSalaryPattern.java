@@ -30,6 +30,9 @@ public class OrgSalaryPattern extends BaseEntity{
 	@ManyToOne(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
 	Organization organization;
 	
+	@Column(name="PAY_PERIOD_TYPE")
+	String payPeriodType;
+	
 	@Temporal(TemporalType.DATE)
 	@Column(name="FIRST_DATE")
 	Date firstDate;
@@ -43,9 +46,10 @@ public class OrgSalaryPattern extends BaseEntity{
 	
 	public OrgSalaryPattern(){};
 	
-	public OrgSalaryPattern(Long orgspSeq, Organization organization, Date firstDate, Date lastDate){
+	public OrgSalaryPattern(Long orgspSeq, Organization organization, String payPeriodType, Date firstDate, Date lastDate){
 		this.orgspSeq = orgspSeq;
 		this.organization = organization;
+		this.payPeriodType = payPeriodType;
 		this.firstDate = firstDate;
 		this.lastDate = lastDate;
 	}
@@ -64,6 +68,14 @@ public class OrgSalaryPattern extends BaseEntity{
 
 	public void setOrganization(Organization organization) {
 		this.organization = organization;
+	}
+	
+	public String getPayPeriodType() {
+		return payPeriodType;
+	}
+
+	public void setPayPeriodType(String payPeriodType) {
+		this.payPeriodType = payPeriodType;
 	}
 
 	public Date getFirstDate() {
